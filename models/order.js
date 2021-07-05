@@ -7,8 +7,6 @@ const OrderSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
       },
-      orders: [
-      
-      ],
+      items: {}
 })
 module.exports = mongoose.model('Order', OrderSchema);
