@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
+    "@mapbox/mapbox-gl-geocoder": "^4.7.1",
     "alert": "^5.0.5",
     "algoliasearch": "^4.8.2",
     "axios": "^0.21.0",
@@ -30,6 +31,7 @@
     "jsonwebtoken": "^8.5.1",
     "jspdf": "^2.3.1",
     "livereload": "^0.9.1",
+    "mapbox-gl": "^2.3.1",
     "moment": "^2.29.1",
     "mongo-sanitize": "^1.1.0",
     "mongodb": "^3.6.2",

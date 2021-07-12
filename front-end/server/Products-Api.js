@@ -8,7 +8,10 @@ static getAdminProducts(userId) {
   }
   static editProduct(formdata) {
     const id = formdata.get("id");
-    return axios.post(`file/edit/${id}`, formdata);
+    return axios().post(`file/edit/${id}`, formdata);
+  }
+  static addProduct(formdata) {
+    return axios().post(`file-upload`, formdata);
   }
 
    static postProduct(product) {
@@ -24,11 +27,11 @@ static getAdminProducts(userId) {
     return axios().post(`${productId}`);
   }
   static getSingleProduct(id) {
-    return axios().get(`p/${id}`);
+    return axios().get(`product/${id}`);
   }
 
   static fetchProducts() {
-    return axios().get(`zoom`);
+    return axios().get(`home`);
   }
   static fetchUserProducts(user) {
     return axios().get(`user-products/${user._id}`);

@@ -1,6 +1,7 @@
 <template>
   <div class="about text-center danger--text">
-    <div class="erro pb-10 " v-if="!total">
+ 
+    <div class="erro pb-10 " v-if="!cart">
       <div style="height:400px;margin:10px auto; width:600px;">
         <v-img
           src="./cart.png"
@@ -61,7 +62,7 @@
                   id="deletebtn"
                   class="pink--text mt-2 d-block text-capitalize"
                   @click="
-                    deletefromCart({
+                    deleteItemfromCart({
                       cart: cart._id,
                       productId: item.productId,
                     })
@@ -80,7 +81,7 @@
         <v-col cols="12" md="3" sm="3">
           <div
             class="payment pt-3 rounded-lg  d-lg  "
-            v-if="total"
+            v-if="cart"
             style="margin-top:26px;"
           >
             <h4 class="font-weight-bold ">
@@ -89,7 +90,7 @@
             </h4>
             <v-btn
               class="checkout text-capitalize font-weight-bold mt-1 "
-              @click="handleClick"
+              @click="openDialog"
             >
               checkout</v-btn
             >
@@ -104,74 +105,159 @@
         </v-col>
       </v-row>
     </div>
+    <!-- start dialog  -->
+          <v-dialog v-model="dialog" width="600">
+            <v-card >
+              <v-container class="pb-0">
+                <v-form v-model="isValid">
+                  <v-card-title
+                    class="font-weight-bold text-capitalize red--text"
+                  >
+                    payment information
+                  </v-card-title>
+                  <v-row dense>
+                    <v-col cols="12" sm="4">
+                      <v-text-field
+                        label="name"
+                        readonly
+                        outlined
+                        dense
+                        v-model="order.name"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                      <v-text-field
+                        label="total"
+                        readonly
+                        outlined
+                        dense
+                        v-model="order.total"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                      <v-text-field
+                        label="count"
+                        readonly
+                        outlined
+                        dense
+                        v-model="order.count"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        hide-details
+                        label="address"
+                        outlined
+                        dense
+                        v-model="order.address"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col col="12">
+                    <div style="height:200px">
+                      <app-map @location="userLocation($event)"></app-map>
+                    </div>
+                    </v-col>
+                  </v-row>
+                 
+                  <v-row dense class="mt-5">
+                    <v-col class="d-flex justify-end ">
+                      <v-card-actions>
+                        <v-btn text color="red" @click="dialog = false"
+                          >cancel</v-btn
+                        >
+                        <v-btn text color="success" @click="handlePayment"
+                          >submit</v-btn
+                        >
+                      </v-card-actions>
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-container>
+            </v-card>
+          </v-dialog>
+    <div>
+ 
+    </div>
   </div>
 </template>
 <script>
-import OrderFunctions from "../../../server/Order_Api";
 import CardFunctions from "../../../server/Card-Api";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "../../../server/MainApi";
+import map from "../Map.vue";
 export default {
+  components: {
+    "app-map": map,
+  },
   data() {
     return {
-      cart: null,
+      order: {},
+      isValid: false,
+      dialog: false,
       errors: null,
-      total: null,
-      sum: null,
       overlay: false,
+      orderlocation: null,
     };
   },
   computed: {
     userCart() {
       return this.$store.getters.getCart;
     },
+    cart() {
+      return this.$store.getters.getCart;
+    },
+    total() {
+      return this.$store.getters.getTotalPrice;
+    },
+    sum() {
+      return this.$store.getters.getCartCount;
+    },
   },
   mounted() {
     this.overlay = true;
-    this.cart = this.$store.getters.getCart;
-    this.sum = this.$store.getters.getCartCount;
-    this.total = this.$store.getters.getTotalPrice;
     this.overlay = false;
   },
   methods: {
-    async makeorder() {
-      try {
-        await OrderFunctions.makeOrder({ cart: this.cart, total: this.total });
-      } catch (error) {
-        this.errors = error;
-      }
+    openDialog() {
+      this.dialog = true;
+      this.order.name = this.currentUser.name;
+      this.order.count = this.sum;
+      this.order.total = this.total;
     },
-    async handleClick() {
+    userLocation(e) {
+      let  location= {
+            location: e,
+            address: this.order.address,
+          }
+        localStorage.setItem("orderLocation",JSON.stringify(location))
+      this.orderlocation = e;
+    },
+  
+    async handlePayment() {
       this.overlay = true;
       try {
         const stripePromise = loadStripe(
           "pk_test_51HW8XsFcp3bB6NpnedYc62t1S6sDcqnQQ5Bg0Dk8omjIyCF4y1frCqgIsCq5WQDum8b4PJAiOONN05ILQeQ8SWte00LMEnghcw"
         );
         const stripe = await stripePromise;
-          const response = await axios().post("create-session",
-          { total: this.total, quantity: this.sum, cart: this.cart }
-        );
-        const session = await response;
-        // When the customer clicks on the button, redirect them to Checkout.
-        stripe.redirectToCheckout({
-          sessionId: session.data.id,
-        }).then(()=> {
-          console.log('done finally');
-            this.clearCart(this.cart);
-          this.$store.commit("resetcartCount");
-          this.makeorder({ cart: this.cart, total: this.total });
-        })
-          .catch((err) => {
-          console.log('error finally');
+        const response = await axios().post("create-session", {
+          total: this.total,
+          quantity: this.sum,
+          cart: this.cart,
+        });
 
-            console.log(err);
-          });;
+        const session = await response;
+        await stripe.redirectToCheckout({
+          sessionId: session.data.id,
+        });
       } catch (error) {
         this.errors = error;
       }
     },
     //  DLETE A PRODUCT FROM THE CART
-    async deletefromCart(productId) {
+    async deleteItemfromCart(productId) {
       try {
         this.overlay = true;
         const res = await CardFunctions.removeFromCard(productId);

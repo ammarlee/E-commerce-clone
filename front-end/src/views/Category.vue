@@ -18,16 +18,9 @@
       </v-tab>
     </v-tabs>
 </template>
-
 <script>
   export default {
     name:'category',
-
-    data() {
-      return {
-        
-      }
-    },
     computed:{
       category(){
         return this.$store.getters.getCategory
@@ -37,13 +30,11 @@
     methods: {
       navegat(item){
         if (this.$route.name ==='cat') {
-       
           this.$router.push('/').then(()=>{
           this.$router.push(`/cat/${item.name}`)
           })
         
       }else{
-         
         this.$router.push(`/cat/${item.name}`)
       }
       }

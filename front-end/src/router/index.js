@@ -8,13 +8,14 @@ import footer from '../views/user/Footer.vue'
 import guardPage from "./Guards/guardPage";
 import AuthantactionRouters from "./Authantication-Routers"
 import ProductRouters from "./Product-Routers"
-
+import AdminRouters from "./Admin-Routers"
 
 Vue.use(VueRouter);
 
 const routes = [
   ...AuthantactionRouters,
   ...ProductRouters,
+  ...AdminRouters,
   {
     path: "/",
     name: "Home",
@@ -23,8 +24,15 @@ const routes = [
       header: header,
       footer: footer,
     },
+  },{
+    path: "/:id",
+    name: "payment",
+    components: {
+      default:()=>{ return import("../views/Payment.vue")},
+      header: header,
+      footer: footer,
+    },
   },
- 
   
   {
     path: "/cat/:name",

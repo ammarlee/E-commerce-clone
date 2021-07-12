@@ -4,7 +4,12 @@ class Category {
 
 //   for category 
 static createCategory(data) {
-    return axios().post(`createCategory`, { name: data.name, img: data.pic });
+  console.log(data);
+    return axios().post(`add-category`, { name: data.name, img: data.pic });
+  }
+  static editCategory(data){
+    return axios().post(`category-edit`,data);
+
   }
   static deleteCategory(id) {
     return axios().post(`delete-category/${id}`);
@@ -14,6 +19,5 @@ static createCategory(data) {
      return axios().get(`get-category`);
    }
   
-
 }
 export default Category

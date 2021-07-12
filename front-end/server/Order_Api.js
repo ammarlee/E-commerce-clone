@@ -16,6 +16,7 @@ static getOrders(userId) {
     return axios().post(`download`, { orders: order });
   }
   static makeOrder(payload) {
+    console.log(payload);
     return axios().post(`make/makeOrder`, payload);
   }
   

@@ -1,4 +1,5 @@
 import ApiServices from '../../server/Card-Api'
+import moment from 'moment'
 export  default{
     data() {
       return {
@@ -23,8 +24,15 @@ export  default{
           this.$store.dispatch("toggleRightDrawer", value);
         }
       },
+      currentUser(){
+        return this.$store.getters.getUser;
+
+      }
     },
     methods: {
+      formateDateWithMoment(date,format){
+        moment(date).format(format)
+      },
       alertDisplay(icon,msg,time) {
         const Toast = this.$swal.mixin({
              toast: true,

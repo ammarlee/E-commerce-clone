@@ -22,10 +22,13 @@ const vueImgConfig = {
   // Consider alt of image as its title in gallery?
   altAsTitle: false,
 }
+import moment from 'moment'
 
 Vue.use(VueImg, vueImgConfig);
 Vue.mixin(Mixins);
-
+Vue.filter('formateDate', function (value) {
+  return moment(value).format("LLL")
+})
 // const base = axios.create({
 //   baseURL: 'https://full-meven-stack.herokuapp.com/'
 // });
@@ -47,8 +50,8 @@ async  mounted() {
   
   try{
     this.$store.commit('resetcartCount',0)
+    // await this.$store.dispatch('fetchCategory')
     await this.$store.dispatch('getProducts')
-    await this.$store.dispatch('fetchCategory')
     const socket = socktConnect(currentUrl)
     socket.on('category',data=>{
       if(data.action == 'create'){
@@ -56,7 +59,9 @@ async  mounted() {
       }
       else if(data.action == 'deleteCategory'){
         this.$store.dispatch('removeCategory',data.category._id)
-        
+      }
+      else if(data.action == 'edit'){
+        this.$store.dispatch('editCategory',data.category)
       }
      else if(data.action == 'createProduct'){
         this.$store.dispatch('pushProduct',data.product)
@@ -65,8 +70,8 @@ async  mounted() {
          this.$store.dispatch('removeProduct',data.product._id)
        }
     })
-  }catch(ee){
-    console.log(ee);
+  }catch(error){
+    console.log(error);
   }
   },
   created () {

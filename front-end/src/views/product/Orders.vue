@@ -13,6 +13,9 @@
                   <th class="text-left text-h6 text-capitalize">
                     price
                   </th>
+                   <th class="text-left text-h6 text-capitalize">
+                    date
+                  </th>
                   <th class="text-left text-h6 text-capitalize">
                     details
                   </th>
@@ -22,16 +25,19 @@
                 <tr v-for="item in orders" :key="item._id">
                   <td>{{ item.items.products.length }}</td>
                   <td>{{ item.items.total }}</td>
+                  <td>{{  item.items.date |formateDate}}</td>
                   <td>
                     <v-btn
                       small
-                      class="info ma-2"
+                      class=" ma-2"
                       :loading="loading"
                       :disabled="loading"
+                      icon
+                      text
                       @click="download(item)"
                     >
-                      <v-icon>mdi-download</v-icon>
-                      download</v-btn
+                      <v-icon color="orange">mdi-eye</v-icon>
+                      </v-btn
                     >
                   </td>
                 </tr>
