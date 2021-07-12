@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div> 
         <form @submit.prevent="addCategory">
         <h2>add category</h2>
         <v-row>
