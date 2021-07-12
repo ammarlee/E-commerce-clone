@@ -43,7 +43,6 @@
 
 <script>
 import Functions from "../../../server/Order_Api";
-import moment  from 'moment';
 export default {
   data() {
     return {
@@ -63,7 +62,7 @@ export default {
       const res = await Functions.getSingleOrders(this.$route.params.id);
       this.order=res.data.order.items.products
       this.total=res.data.order.items.total
-      this.date = moment(res.data.order.items.date).format("LLL")
+      this.date = this.formateDateWithMoment(res.data.order.items.date,"LLL")
     } catch (error) {
       this.errors = error.response;
     }

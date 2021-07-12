@@ -15,7 +15,7 @@ import axios from "./MainApi";
 class Functions {
 
   static searchingbar(search) {
-    return axios().post(`search`, { name: search });
+    return axios().post(`product/search`, { name: search });
   }
 
   static createReview(data) {

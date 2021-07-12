@@ -6,6 +6,9 @@ class Card {
 static addTocart(payload) {
     return axios().post(`add/addCart`, payload);
   }
+  static checkPayment(payload) {
+    return axios().post(`checkPayment`,payload);
+  }
   static getCardItems(payload) {
     return axios().get(`single/cart/${payload.userId}`);
   }

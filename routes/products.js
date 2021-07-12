@@ -2,8 +2,9 @@ const path = require('path')
 const express = require('express')
 const router = express.Router()
 const User =require(path.join(__dirname,'../models/user'))
-var jwt = require('jsonwebtoken')
 const productController = require(path.join(__dirname,'../controlles/product/products'))
+
+var jwt = require('jsonwebtoken')
 const {promisify} =require('util')
 
 const protect= async(req,res,next)=>{
@@ -28,19 +29,13 @@ const protect= async(req,res,next)=>{
 
 }
 
-router.get('/zoom',productController.homePage)
+router.get('/home',productController.homePage)
 router.post('/product/search',productController.searching)
-router.get('/user-products/:userId',productController.userProducts)
+
 router.post('/review',productController.createReview)
 router.get('/review/:productId',productController.fetchReviews)
-  router.post('/make/makeOrder',productController.makeOrder)
-  router.get('/get/orders/:id',productController.getUserOrders)
-  router.get('/get/single-order/:id',productController.getSingleOrder)
-  router.post('/add/addCart',protect,productController.addToCart)
-  router.get('/single/cart/:id',productController.getUserCart)
-  router.post('/delete/cart',protect,productController.deleteItemFromcart)
-  router.post('/delete/clear',protect,productController.clearCart)
-  router.post('/productId/:id',productController.getProductDetails)
-  router.get('/p/:id',productController.getProductDetails)
+
+  // router.post('/productId/:id',productController.getProductDetails)
+  router.get('/product/:id',productController.getProductDetails)
 
 module.exports = router

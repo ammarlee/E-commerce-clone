@@ -12,6 +12,11 @@ const xss = require('xss-clean')
 const productsRoutes =require(path.join(__dirname,'./routes/products'))
 const authRoutes = require(path.join(__dirname,'./routes/auth'))
 const adminRoutes = require(path.join(__dirname,'./routes/admin'))
+
+const cardRoutes = require(path.join(__dirname,'./routes/card'))
+const categoryRoutes = require(path.join(__dirname,'./routes/category'))
+const userRoutes = require(path.join(__dirname,'./routes/user'))
+const ordersRoutes = require(path.join(__dirname,'./routes/orders'))
 var MongoDBStore = require('connect-mongodb-session')(session)
 const cookieParser = require('cookie-parser')
 const User = require(path.join(__dirname,'./models/user'))
@@ -64,9 +69,7 @@ var store = new MongoDBStore({
       saveUninitialized: false
     }))
 app.use(require('connect-livereload')())
-
 app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
-
 app.use((req,res,next)=>{
   if (!req.session.user) {
     return next();
@@ -77,6 +80,17 @@ app.use((req,res,next)=>{
     next();
   })
   .catch(err => console.log(err));
+})
+
+app.post('/checkPayment',async(req, res, next)=>{
+  try {
+    const session =await stripe.checkout.sessions.retrieve(req.body.id)
+    res.status(200).json(session)
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error})
+  }
 })
 // work with strip
 app.post('/create-session', async (req, res) => {
@@ -98,25 +112,28 @@ app.post('/create-session', async (req, res) => {
         },
       ],
       mode: 'payment',
-      token: ()=> {
-        // DO STUFF HERE
-        console.log("wowwwwwwwwwwwwwwwwwww paid ",);
-    },
-      success_url: `${currentUrl}`,
+      success_url: 'http://localhost:8080/{CHECKOUT_SESSION_ID}',
+      // success_url: `${currentUrl}/success?id=${CHECKOUT_SESSION_ID}`,
       cancel_url: `${currentUrl}`,
     });
-    console.log('done fianlly !!!!');
+    console.log(session);
+    
     res.json({ id: session.id });
     
   } catch (error) {
+    console.log(error);
     res.status(400).json(error)
-    
   }
 });
 //  finished work with strip
+app.use(categoryRoutes)
 app.use(adminRoutes)
 app.use(productsRoutes)
 app.use(authRoutes)
+app.use(cardRoutes)
+app.use(userRoutes)
+app.use(ordersRoutes)
+
 const socket = require('./socket')
 const port =process.env.PORT || 3000
 
@@ -134,10 +151,7 @@ mongoose
    io.on('connection',socket=>{
      console.log('connected to ios' ,socket.id);
    })
- 
- 
 })
-
   .catch(err => {
     console.log(err);
   });

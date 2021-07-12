@@ -1,197 +1,246 @@
 <template>
-<v-app>
-  <div>
-    <div id="menu mt-15 d-none">
-    <div class="d-flex justify-center d-none mt-15 pt-5 pb-3 mr-5 text-capitalize text-center">
-      <div v-for="(style,i) in styles" :key="i">
-        <div class="mr-2">
-        <input :id="style.id" :type="style.type" name="rtoggle" :value="style.value" />
-        <label class="font-weight-bold text-h6" :for="style.id">{{style.value}}</label>
-        </div>
+  <div class="main">
+        <div id="map" @click="addMarkToLocation"></div>
+  
+    <div class="flex" hidden>
+      <!-- Map Display here -->
+      <div class="map-holder" hidden>
+        <div id="map" @click="addMarkToLocation"></div>
       </div>
 
-    </div>
-    </div>
-    <!-- the map -->
-    <div>
-      <v-row>
-        <v-col cols='11' style="overflow: hidden;" md="11" sm='11'>
-     <div id="mapContainer" class="basemap"></div>
+      <!-- Coordinates Display here -->
+      <div class="dislpay-arena" hidden >
+        <div class="coordinates-header" >
+          <h3>Current Coordinates</h3>
+          <p>Latitude: {{ center[0] }}</p>
+          <p>Longitude: {{ center[1] }}</p>
+        </div>
 
-        </v-col>
-      </v-row>
+        <div class="coordinates-header" hidden >
+          <h3>Current Location</h3>
 
+          <div class="form-group">
+            <input
+              type="text"
+              class="location-control"
+              :value="location"
+              readonly
+            />
+            <button type="button" class="copy-btn" @click="copyLocation">
+              Copy
+            </button>
+          </div>
+
+          <button
+            type="button"
+            :disabled="loading"
+            :class="{ disabled: loading }"
+            class="location-btn"
+            @click="getLocation"
+          >
+            Get Location
+          </button>
+        </div>
+      </div>
     </div>
-
   </div>
-
-</v-app>
 </template>
 
 <script>
 import mapboxgl from "mapbox-gl";
-
+import axios from "axios";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 export default {
-  name: "BaseMap",
   data() {
     return {
-      accessToken: 'pk.eyJ1IjoiYW1tYXJsZWUxNiIsImEiOiJja2hubnF1b2wwMWhxMnNwNXc0azV6ZnpkIn0.c_fzU8XDuRRKLO51vvBM1g',
-      santo: false,
-      styles:[
-  {id:"streets-v11",type:'radio',name:'rtoggle',value:"streets"},
-  {id:"light-v10",type:'radio',name:'rtoggle',value:"light"},
-  {id:"dark-v11",type:'radio',name:'rtoggle',value:"dark"},
-  {id:"outdoors-v11",type:'radio',name:'rtoggle',value:"outdoors"},
-  {id:"satellite-v9",type:'radio',name:'rtoggle',value:"satellite"},
-  ]
+      loading: false,
+      mapMarkers: [],
+      location: "",
+      access_token:
+        "pk.eyJ1IjoiYW1tYXJsZWUxNiIsImEiOiJja2hubnF1b2wwMWhxMnNwNXc0azV6ZnpkIn0.c_fzU8XDuRRKLO51vvBM1g",
+      center: [47.718809, 29.319598],
+      map: {},
+      coords: null,
     };
   },
   mounted() {
-    mapboxgl.accessToken = this.accessToken;
-
-   const map =  new mapboxgl.Map({
-      container: "mapContainer",
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [47.718809, 29.319598],
-      zoom: 4,
-      pitch: 60,
-      bearing: -60,
-      // maxBounds: [
-      //   [103.6, 1.1704753],
-      //   [104.1, 1.4754753],
-      // ],
-    });
-    var nav = new mapboxgl.NavigationControl();
-      map.addControl(nav, 'top-right')
-       new mapboxgl.Popup({ closeOnClick: false })
-          
-           new mapboxgl.Popup({ closeOnClick: false })
-          .setLngLat([40.003696, 40.261594])
-          .setHTML('<h1>new branch !</h1>')
-          .addTo(map);
-          
-           
-var layerList = document.getElementById('menu');
-var inputs = layerList.getElementsByTagName('input');
- 
-function switchLayer(layer) {
-var layerId = layer.target.id;
-map.setStyle('mapbox://styles/mapbox/' + layerId);
-}
- 
-for (var i = 0; i < inputs.length; i++) {
-inputs[i].onclick = switchLayer;
-}
-          map.on('load', function () {
-// Add an image to use as a custom marker
-map.loadImage(
-'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
-function (error, image) {
-if (error) throw error;
-map.addImage('custom-marker', image);
-// Add a GeoJSON source with 2 points
-map.addSource('points',
- {
-'type': 'geojson',
-'data': {
-'type': 'FeatureCollection',
-'features': [
-{
-// feature for Mapbox DC
-'type': 'Feature',
-'geometry': {
-'type': 'Point',
-'coordinates': [31.206976780397856,30.022857474969623]
-},
-'properties': {
-'title': 'EGYPT'
-}
-},
-{
-// feature for Mapbox SF
-'type': 'Feature',
-
-'geometry': {
-'type': 'Point',
-'coordinates': [47.718809, 29.319598]  
-},
-'properties': {
-'title': 'moonLight'
-}
-},
-{
-// feature for Mapbox SF
-'type': 'Feature',
-'geometry': {
-'type': 'Point',
-'coordinates': [47.70720030622162, 29.330230446908107]
-
-},
-'properties': {
-'title': 'main'
-}
-}
-,
-{
-// feature for Mapbox SF
-'type': 'Feature',
-'geometry': {
-'type': 'Point',
-'coordinates': [ -102.28615317797728,21.86023132986236]
-
-},
-'properties': {
-'title': 'new'
-}
-}
-,
-{
-// feature for Mapbox SF
-'type': 'Feature',
-'geometry': {
-'type': 'Point',
-'coordinates': [ 47.718809,29.319598]
-
-},
-'properties': {
-'title': 'away'
-}
-}
-
-
-  ]
-}
-});
- 
-// Add a symbol layer
-map.addLayer({
-'id': 'points',
-'type': 'symbol',
-'source': 'points',
-'layout': {
-'icon-image': 'custom-marker',
-// get the title name from the source's "title" property
-'text-field': ['get', 'title'],
-'text-font': [
-'Open Sans Semibold',
-'Arial Unicode MS Bold'
-],
-'text-offset': [0, 1.25],
-'text-anchor': 'top'
-}
-});
-}
-);
-});
+    this.createMap();
   },
-  
+  methods: {
+    async createMap() {
+      try {
+        mapboxgl.accessToken = this.access_token;
+        this.map = new mapboxgl.Map({
+          container: "map",
+          style: "mapbox://styles/mapbox/streets-v11",
+          center: this.center,
+          zoom: 3,
+        });
+        let geocoder = new MapboxGeocoder({
+          accessToken: this.access_token,
+          mapboxgl: mapboxgl,
+        });
+        this.map.addControl(geocoder);
+
+        geocoder.on("result", (e) => {
+          const marker = new mapboxgl.Marker({
+            draggable: true,
+            color: "green",
+            // color: "#D80739",
+          })
+            .setLngLat(e.result.center)
+            .addTo(this.map);
+          this.center = e.result.center;
+          marker.on("dragend", (e) => {
+            this.center = Object.values(e.target.getLngLat());
+          });
+        });
+      } catch (err) {
+        console.log("map error", err);
+      }
+    },
+
+    async getLocation() {
+      try {
+        this.loading = true;
+        const response = await axios.get(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.center[0]},${this.center[1]}.json?access_token=${this.access_token}`
+        );
+        this.loading = false;
+        this.location = response.data.features[0].place_name;
+      } catch (err) {
+        this.loading = false;
+        console.log(err);
+      }
+    },
+    copyLocation() {
+      if (this.location) {
+        navigator.clipboard.writeText(this.location);
+        alert("Location Copied");
+      }
+      return;
+    },
+
+    addMarkToLocation() {
+      this.map.on("click", (e) => {
+        this.coords = {lng:e.lngLat.lng,lat:e.lngLat.lat}
+        this.mapMarkers.forEach((marker) => marker.remove());
+        this.mapMarkers = [];
+
+        const marker = new mapboxgl.Marker({
+          draggable: true,
+          color: "green",
+          // color: "#D80739",
+        })
+          .setLngLat([e.lngLat.lng, e.lngLat.lat])
+          .addTo(this.map);
+        this.mapMarkers.push(marker);
+      this.$emit('location',this.coords)
+      });
+    },
+  },
 };
 </script>
-<style lang="scss" scoped>
-.basemap {
-  width: 800px;
-  height: 500px;
-  margin: 20px auto;
 
+<style scoped>
+.main {
+  padding: 1px 50px;
+}
+.flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.map-holder {
+  width: 85%;
+}
+#map {
+  height: 30vh;
+}
+.dislpay-arena {
+  background: #ffffff;
+  box-shadow: 0px -3px 10px rgba(0, 58, 78, 0.1);
+  border-radius: 5px;
+  padding: 20px 30px;
+  width: 25%;
+}
+.coordinates-header {
+  margin-bottom: 50px;
+}
+.coordinates-header h3 {
+  color: #1f2a53;
+  font-weight: 600;
+}
+.coordinates-header p {
+  color: rgba(13, 16, 27, 0.75);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.form-group {
+  position: relative;
+}
+.location-control {
+  height: 30px;
+  background: #ffffff;
+  border: 1px solid rgba(31, 42, 83, 0.25);
+  box-shadow: 0px 0px 10px rgba(73, 165, 198, 0.1);
+  border-radius: 4px;
+  padding: 0px 10px;
+  width: 90%;
+}
+.location-control:focus {
+  outline: none;
+}
+.location-btn {
+  margin-top: 15px;
+  padding: 10px 15px;
+  background: #d80739;
+  box-shadow: 0px 4px 10px rgba(73, 165, 198, 0.1);
+  border-radius: 5px;
+  border: 0;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.location-btn:focus {
+  outline: none;
+}
+.disabled {
+  background: #db7990;
+  cursor: not-allowed;
+}
+.copy-btn {
+  background: #f4f6f8 0% 0% no-repeat padding-box;
+  border: 1px solid #f4f6f8;
+  border-radius: 0px 3px 3px 0px;
+  position: absolute;
+  color: #5171ef;
+  font-size: 0.875rem;
+  font-weight: 500;
+  height: 30px;
+  padding: 0px 10px;
+  cursor: pointer;
+  right: 3.5%;
+  top: 5%;
+}
+.mapboxgl-marker {
+  height: 20px;
+  width: 20px;
+  z-index: 5;
+  border: 1px solid black;
+  border-radius: 50%;
+  background-color: #305bad;
+}
+.copy-btn:focus {
+  outline: none;
+}
+.marker {
+  background-color: red;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 </style>
