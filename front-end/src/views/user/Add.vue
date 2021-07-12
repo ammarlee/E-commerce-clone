@@ -14,6 +14,11 @@
         <router-link to="/" tag="span" style="cursor:pointer">
           Shopping
         </router-link>
+
+          <router-link to="/category" tag="span" style="cursor:pointer">
+          cat
+        </router-link>
+        
       </v-toolbar-title>
       <!-- THE SEARCHING BAR  -->
       <searching-component></searching-component>
@@ -27,7 +32,7 @@
         style="height:67px"
       >
         <router-link to="/card" v-if="getUser" tag="span" class="pt-6 headline">
-          <v-btn text id="shop" class="mt-5">
+          <v-btn  icon text id="shop" class="mt-4">
             <v-badge
               color="green"
               overlap

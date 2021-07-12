@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Functions from '../../../server/api';
     export default {
         data() {
             return {
@@ -101,11 +101,9 @@ import axios from 'axios'
         if (this.isLoading) return
         this.isLoading = true
 
-        // Lazily load input items
-        axios.post(`https://full-meven-stack.herokuapp.com/product/search`,{name:val})
-          .then(res => {
+        Functions.searchingbar({name:val}).then(res => {
+          console.log(res.data);
             this.items = res.data
-            console.log(this.items);
           })
           .catch(err => {
             console.log(err)
