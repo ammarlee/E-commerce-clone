@@ -14,11 +14,6 @@
         <router-link to="/" tag="span" style="cursor:pointer">
           Shopping
         </router-link>
-
-          <router-link to="/category" tag="span" style="cursor:pointer">
-          cat
-        </router-link>
-        
       </v-toolbar-title>
       <!-- THE SEARCHING BAR  -->
       <searching-component></searching-component>
@@ -49,7 +44,7 @@
 
         <router-link
           v-if="!getUser"
-          to="/login"
+          to="/login" 
           tag="span"
           class="pt-6  mr-1 ml-1 headline"
         >
@@ -201,19 +196,7 @@ export default {
             link: "/orders",
             icon: "mdi-playlist-check",
           },
-          {
-            id: 584354065,
-            page: "products",
-            link: "/allproducts",
-            icon: "mdi-shopping-outline",
-          },
-
-          {
-            id: 7124214,
-            page: "admin",
-            link: "/products",
-            icon: "mdi-shopping-outline",
-          },
+         
         ];
         return items;
       } else {
