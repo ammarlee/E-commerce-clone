@@ -18,27 +18,17 @@ const transporter = nodeMailer.createTransport(nodegride({
 
 exports.makeOrder=async (req,res,next)=>{
   const userId = req.body.cart.userId
+  let date = new Date()
   try {
-    const order = await Order.findOne({userId})
-    if (order) {
-      order.orders.push({products:req.body.cart.products,total:req.body.total})
-      await order.save()
-      return res.status(200).json({
-        order,
-        success:true
-      })
-      
-    }else{
-      const newOrder = await Order.create({
-        userId,
-        orders:[{products:req.body.cart.products,total:req.body.total}]
-      })
-     const  newOne = await newOrder.save()
-     return res.status(200).json({
-       newOne,
-       success:true
-     })
-    }
+    const newOrder = await Order.create({
+      userId,
+      items:{products:req.body.cart.products,total:req.body.total,date}
+    })
+   const  newOne = await newOrder.save()
+   return res.status(200).json({
+     order:newOne,
+     success:true
+   })
     
   } catch (error) {
     return res.status(401).json({
@@ -46,34 +36,58 @@ exports.makeOrder=async (req,res,next)=>{
       msg:'you have a problem with adding order',
       error
     })
-    
   }
-  
-  
   }
-exports.getUserOrders=(req,res,next)=>{
-    const userId= req.params.id
-    Order.findOne({userId:userId}).then((orders)=>{
-      if(!orders){
-        res.status(500).json({
-          msg:'you have not`t any orders yet'
-        })
-      }else{
-        res.status(200).json({
-          success:true,
-          orders
-        })
-      }
-    
-    
-    }).catch((err)=>{
-      res.status(401).json({
-        err,
-        success:false,
-        msg:'you have not`t any orders yet'
-  
-      })
+  exports.getSingleOrder = async (req,res,next)=>{
+    const orderId= req.params.id
+    try {
+  let order = await Order.findOne({_id:orderId})
+  if(!order){
+    res.status(500).json({
+      msg:'you have not`t any order yet'
     })
+  }else{
+    res.status(200).json({
+      success:true,
+      order
+    })
+  }
+  
+} catch (error) {
+  res.status(401).json({
+    err,
+    success:false,
+    msg:'you have not`t any orders yet'
+
+  })
+}
+   
+  }
+
+exports.getUserOrders=async (req,res,next)=>{
+    const userId= req.params.id
+    try {
+  let orders = await Order.find({userId})
+  if(!orders){
+    res.status(500).json({
+      msg:'you have not`t any orders yet'
+    })
+  }else{
+    res.status(200).json({
+      success:true,
+      orders
+    })
+  }
+  
+} catch (error) {
+  res.status(401).json({
+    err,
+    success:false,
+    msg:'you have not`t any orders yet'
+
+  })
+}
+   
   }
   
   // POST A NEW ITEMS TO THE CARD 
