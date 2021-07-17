@@ -65,6 +65,16 @@
                     <v-col cols="12">
                       <input type="file" @change="uploadFile" multiple />
                     </v-col>
+                    <v-col v-if="editmode" cols="12">
+                      <div class="d-flex justify-space-around flex-wrap">
+                      <div  v-for="(img,i) in product.img" :key="i">
+                        <v-img :src="img" alt="post"  
+                         max-height="170" max-width="150">
+                         </v-img>
+                      </div>
+                      </div>
+
+                    </v-col>
                     <v-col cols="12">
                       <vue-editor v-model="product.description"></vue-editor>
                     </v-col>
@@ -254,12 +264,14 @@ export default {
     },
     add() {
       this.product = {};
+      this.images = []
       this.dialog = true;
     },
     edit(id) {
       this.editmode = true;
       this.id = id;
       this.product = { ...this.entities.filter((e) => e._id == id)[0] };
+      console.log(this.product);
       this.dialog = true;
     },
     confirmEdit() {
@@ -277,8 +289,13 @@ export default {
       formData.append("id", JSON.stringify(this.id));
       formData.append("user", JSON.stringify(this.user));
       Functions.editProduct(formData)
-        .then(() => {
+        .then((res) => {
+          console.log(res.data);
           this.dialogNotifySuccess("edited successfully");
+         
+           var i= this.entities.indexOf(this.entities.filter(e=>e._id==res.data.post._id )[0]);
+       
+      this.$set(this.entities, i, res.data.post);
 
           this.dialog = false;
           this.editmode = false;
@@ -332,6 +349,8 @@ export default {
         .then((res) => {
           this.entities.push(res.data.products);
           this.dialog = false;
+          this.product = {}
+          this.images = []
           this.dialogNotifySuccess("added new product");
         })
         .catch((err) => {

@@ -6,6 +6,7 @@ const express = require('express')
 const session = require('express-session')
 const hamlet = require('helmet')
 const hpp = require('hpp')
+const compression = require('compression')
 const mongoSanitize = require('express-mongo-sanitize')
 const morgan = require('morgan');
 const xss = require('xss-clean')
@@ -37,15 +38,16 @@ app.use((req,res,next)=>{
     next()
 })
 let cors = require('cors')
-app.use(hamlet())
+// app.use(hamlet())
 app.use(morgan('dev'))
 const currentUrl = "http://localhost:8080"
+// const currentUrl = "https://full-meven-stack.herokuapp.com"
 
 app.use(mongoSanitize())
 app.use(xss())
 app.use(hpp())
 app.use(cors({
-  //  origin:['https://full-meven-stack.herokuapp.com/'],
+  //  origin:['http://localhost:8081'],
   origin:[currentUrl],
     methods:['GET','POST'],
     credentials: true ,// enable set cookie
@@ -68,7 +70,7 @@ var store = new MongoDBStore({
       resave: false,
       saveUninitialized: false
     }))
-app.use(require('connect-livereload')())
+// app.use(require('connect-livereload')())
 app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
 app.use((req,res,next)=>{
   if (!req.session.user) {
@@ -112,7 +114,7 @@ app.post('/create-session', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: 'http://localhost:8080/{CHECKOUT_SESSION_ID}',
+      success_url: `${currentUrl}/{CHECKOUT_SESSION_ID}`,
       // success_url: `${currentUrl}/success?id=${CHECKOUT_SESSION_ID}`,
       cancel_url: `${currentUrl}`,
     });
@@ -133,7 +135,7 @@ app.use(authRoutes)
 app.use(cardRoutes)
 app.use(userRoutes)
 app.use(ordersRoutes)
-
+app.use(compression())
 const socket = require('./socket')
 const port =process.env.PORT || 3000
 

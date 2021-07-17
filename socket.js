@@ -1,9 +1,12 @@
 let io;
+const currentUrl = "http://localhost:8080"
+// const currentUrl = "https://full-meven-stack.herokuapp.com"
 module.exports = {
   init: httpServer => {
     io = require('socket.io')(httpServer,{
         cors: {
-          origin: "http://localhost:8080",
+          // origin: "http://localhost:8081",
+          origin: currentUrl,
           methods: ["GET", "POST"]
             
         }

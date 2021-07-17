@@ -69,7 +69,6 @@ const actions = {
    async getProducts({commit,dispatch}){
     try {
       const data = await productsFunctions.fetchProducts()
-      console.log("products",data.data);
       commit('setProducts',data.data)
      await dispatch('fetchCategory')
     } catch (error) {

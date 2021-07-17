@@ -32,15 +32,11 @@ const mutations = {
         state.isAuthanticated = false
         localStorage.setItem("user",JSON.stringify(null));
       localStorage.setItem("userToken", JSON.stringify(null));
-
-
-       
       },
 
 }
 const actions = {
     logoutUser({dispatch,commit}){
-      console.log('logout now');
         dispatch('setUser',null)
         commit('logoutUser')
         dispatch('setAuth',false)
@@ -49,10 +45,13 @@ const actions = {
   
       },
       autoSigningUser({ dispatch }, currentUser){
+        if(currentUser){
+
         dispatch('setUser',currentUser)
-        dispatch('setAuth',currentUser.authanticated)
+        dispatch('setAuth',true)
         dispatch('setToken',currentUser.token)
         dispatch('findCart',currentUser._id)
+      }
   
       },
       setallUserData({ dispatch }, currentUser) {

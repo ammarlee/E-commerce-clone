@@ -29,10 +29,7 @@ Vue.mixin(Mixins);
 Vue.filter('formateDate', function (value) {
   return moment(value).format("LLL")
 })
-// const base = axios.create({
-//   baseURL: 'https://full-meven-stack.herokuapp.com/'
-// });
-// Vue.prototype.$http = base; 
+
   
 Vue.use(VueSweetalert2);
 Vue.config.productionTip = false;
@@ -44,13 +41,11 @@ new Vue({
   vuetify,
   render: h => h(App),
 async  mounted() {
-  console.log("mounted app");
   let currentUrl = 'http://localhost:3000/'
-  // let currentUrl = 'https://full-meven-stack.herokuapp.com/'
+  // let currentUrl = 'https://ammarshop.herokuapp.com/'
   
   try{
     this.$store.commit('resetcartCount',0)
-    // await this.$store.dispatch('fetchCategory')
     await this.$store.dispatch('getProducts')
     const socket = socktConnect(currentUrl)
     socket.on('category',data=>{

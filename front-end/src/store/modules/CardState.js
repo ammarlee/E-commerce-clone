@@ -42,8 +42,7 @@ const actions = {
       
     try {
     let cartItems =  await cardFunctions.getCardItems({userId,token:getters.token})
-      console.log(cartItems);
-    if(!cartItems.data.cart && cartItems.data.cart.products.length ==0){
+    if(!cartItems.data.cart){
         commit('resetcartCount',0)
       }else{
         const cart = cartItems.data.cart
@@ -77,7 +76,6 @@ const actions = {
 
   },
   async addToCart({commit},payload){
-    console.log('this is th data in vux',payload);
     commit('addToCart',payload)
   },
   
