@@ -129,23 +129,17 @@ export default {
       
   }),
   methods: {
-  async  logout(){
-    try {
-      await Functions.logOut()
-     
-           this.$store.dispatch('setUser',null)
-           this.$store.dispatch('setAuth',false)
-           this.$store.dispatch('resetcartCount',0)
-           this.$store.dispatch('setCart',null)
-
-           this.$router.push('/login')
-           
-      
-    } catch (error) {
-      this.errors = error
-    }
-   
+    async logout() {
+      try {
+        await Functions.logOut();
+        this.$store.dispatch("logoutUser").then(() => {
+          this.$router.push("/login");
+        });
+      } catch (error) {
+        this.errors = error;
+      }
     },
+
     login(){
            this.$router.push('/login')
 

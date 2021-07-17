@@ -16,7 +16,6 @@
             <v-card class="mx-auto" color="grey lighten-4" max-width="600">
               <v-img
                 :src="pro.img[0]"
-                :lazy-src="pro.img[0]"
                 contain
                 max-height="260"
                 aspect-ratio="1.4"
@@ -118,9 +117,13 @@ export default {
 
   methods: {
     fetchData(){
-       this.products=this.getProducts.posts.filter((p) => {
+      if (this.getProducts && this.getProducts.posts ) {
+        // debugger;
+        
+        this.products=this.getProducts.posts.filter((p) => {
           return p.category == this.param;
         });
+         }
 
     },
 

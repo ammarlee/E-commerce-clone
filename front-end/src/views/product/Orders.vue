@@ -1,6 +1,13 @@
-<template>
+ <template>
   <div class="mt-15">
     <v-container>
+      <v-row>
+      <v-col class="d-flex justify-center">
+        <div class="px-10 py-5 rounded-lg grey lighteen-3">
+        <h2 class="text-capitalize white--text ">all order</h2>
+        </div>
+      </v-col>
+     </v-row>
       <v-row>
         <v-col cols="12">
           <v-simple-table class="mt-15 font-weight-bold" height="300px">
@@ -86,3 +93,4 @@ export default {
   },
 };
 </script>
+

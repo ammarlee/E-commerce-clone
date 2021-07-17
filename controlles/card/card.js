@@ -91,6 +91,7 @@ const Cart =require(path.join(__dirname,'../../models/cart'))
         cart:null
       })
     }).catch((error)=>{
+      
        res.status(500).json({
         msg:'you have an error with clear the card',
         error

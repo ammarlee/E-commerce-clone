@@ -177,12 +177,7 @@ export default {
     menuItems() {
       if (this.isLoggedIn) {
         let items = [
-          {
-            id: 51242,
-            page: "cart",
-            link: "/cart",
-            icon: "mdi-cart",
-          },
+         
           {
             id: 51242,
             page: "cart",

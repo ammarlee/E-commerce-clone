@@ -1,4 +1,6 @@
 const cloudinary = require('cloudinary').v2
+
+
 cloudinary.config({
     cloud_name: 'ammarleejot', 
     api_key: '898697172461775', 
@@ -7,7 +9,9 @@ cloudinary.config({
 })
 exports.uploads = (file)=>{
     return new Promise(resolv=>{
+        console.log('function start');
         cloudinary.uploader.upload(file, (error, result)=>{
+            console.log(error);
             if (!error) {
                 resolv({
                     url:result.url,

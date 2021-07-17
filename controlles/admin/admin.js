@@ -2,13 +2,16 @@ var path = require("path");
 const Product = require(path.join(__dirname, "../../models/product"));
 const clody = require("../cloud");
 const Socket = require(path.join(__dirname, "../../socket"));
-
+ 
 // create PRODUCT
 exports.CreateProduct = async (req, res, next) => {
-  let d = JSON.parse(req.body.data);
+  let data = JSON.parse(req.body.data);
   let user = JSON.parse(req.body.user);
-  let { name, price, quantity, category, description } = d;
+  let { name, price, quantity, category, description } = data;
+  let product
   try {
+  if(files && files.length > 0) {
+
     const uploader = async (path) => await clody.uploads(path);
     let urls = [];
     const files = req.files;
@@ -20,7 +23,7 @@ exports.CreateProduct = async (req, res, next) => {
     const images = urls.map((p) => {
       return p.url;
     });
-    const product = new Product({
+     product = new Product({
       name,
       price,
       quantity,
@@ -29,6 +32,17 @@ exports.CreateProduct = async (req, res, next) => {
       description,
       userId: user._id,
     });
+  }else{
+    product = new Product({
+      name,
+      price,
+      quantity,
+      category,
+      description,
+      userId: user._id,
+    });
+
+  }
     const products = await product.save();
     Socket.getIO().emit("category", {
       action: "createProduct",
@@ -42,33 +56,47 @@ exports.CreateProduct = async (req, res, next) => {
 };
 // EDIT PRODUCT
 exports.editProduct = async (req, res, next) => {
-  let d = JSON.parse(req.body.product);
+  let product = JSON.parse(req.body.product);
   let user = JSON.parse(req.body.user);
-  let { name, price, quantity, category, description } = d;
+  let { name, price, quantity, category, description } = product;
+  let edited
+  
   try {
-    const uploader = async (path) => await clody.uploads(path);
-    let urls = [];
     const files = req.files;
-    console.log(files);
-    for (let file of files) {
-      const { path } = file;
-      const newpath = await uploader(path);
-      urls.push(newpath);
+    if(files && files.length > 0) {
+      const uploader = async (path) => await clody.uploads(path);
+      let urls = [];
+
+      for (let file of files) {
+        const { path } = file;
+        const newpath = await uploader(path);
+        urls.push(newpath);
+      }
+      const images = urls.map((p) => {
+        return p.url;
+      });
+       edited = await Product.findOneAndUpdate(
+        { _id: product._id },
+        { $set: { name, img: images, price, quantity, description, category } },
+        { new: true }
+      );
+     
+    } else{
+       edited = await Product.findOneAndUpdate(
+        { _id: product._id },
+        { $set: { name, price, quantity, description, category } },
+        { new: true }
+      );
+      
+      
     }
-    const images = urls.map((p) => {
-      return p.url;
-    });
-    const edited = await Product.findOneAndUpdate(
-      { _id: user._id },
-      { $set: { name, img: images, price, quantity, description, category } },
-      { new: false }
-    );
-    console.log(edited);
     res.status(200).json({
       success: true,
+      post:edited,
       msg: "you have edited product",
     });
   } catch (error) {
+    console.log(error);
     res.status(401).json({
       success: false,
       msg: "you coludnt  have edit the product",
@@ -78,7 +106,6 @@ exports.editProduct = async (req, res, next) => {
 // delete product
 exports.deleteProduct = (req, res, next) => {
   const productId = req.params.id;
-  console.log(productId);
   return Product.findOneAndRemove({ _id: productId })
     .then((product) => {
       Socket.getIO().emit("category", { action: "deleteProduct", product });
@@ -94,7 +121,6 @@ exports.deleteProduct = (req, res, next) => {
         msg: "you coludnt  have deleted the product",
       });
     });
-  // res.send('DELTE SINGLE PRODUCT WITH THAT ID ',productId)
 };
 
 

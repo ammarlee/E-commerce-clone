@@ -4,7 +4,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 
 axios.defaults.baseURL = 'http://localhost:3000/';
-// axios.defaults.baseURL = "https://full-meven-stack.herokuapp.com/"
+// axios.defaults.baseURL = "https://ammarshop.herokuapp.com/"
 
 
 axios.withCredentials= false,

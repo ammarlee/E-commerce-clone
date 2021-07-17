@@ -7,19 +7,20 @@ import Functions from "../../server/Card-Api";
 import OrderFunctions from "../../server/Order_Api";
 import CardFunctions from "../../server/Card-Api";
 
-
 export default {
   async mounted() {
     try {
+      console.log();
       await Functions.checkPayment({ id: this.$route.params.id });
-         this.clearCart(this.cart);
-        this.makeorder({ cart: this.cart, total: this.total });
-        this.$router.push('/orders')
+      console.log("this.cart", this.cart);
+      this.makeorder({ cart: this.cart, total: this.total });
+      this.clearCart(this.cart);
+      this.$router.push("/orders");
     } catch (error) {
       console.log(error);
     }
   },
-   computed: {
+  computed: {
     userCart() {
       return this.$store.getters.getCart;
     },
@@ -36,13 +37,13 @@ export default {
   methods: {
     async makeorder() {
       try {
-          let location = localStorage.getItem('orderLocation')
-    let orderLocation = JSON.parse(location)
+        let location = localStorage.getItem("orderLocation");
+        let orderLocation = JSON.parse(location);
 
         await OrderFunctions.makeOrder({
           cart: this.cart,
           total: this.total,
-          location:orderLocation ||{}
+          location: orderLocation || {},
         });
       } catch (error) {
         this.errors = error;
@@ -57,6 +58,7 @@ export default {
       try {
         this.overlay = true;
         await CardFunctions.clearTheCart(cart);
+        this.updateCardInfo([], null, 0);
         this.dialogNotifySuccess("thanks for your payment ");
       } catch (error) {
         this.errors = error.response.data;

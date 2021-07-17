@@ -46,14 +46,11 @@ const transporter = nodeMailer.createTransport(nodegride({
   }
   exports.searching=(req,res,next)=>{
     index.search(req.body.name).then((result)=>{
-       console.log(' found',req.body.name);
        return res.status(200).json( result.hits)
      })
      .catch((error)=>{
-     
        return  res.status(401).json(error)
      })
-  
  }
 
   exports.createReview=async(req,res,next)=>{

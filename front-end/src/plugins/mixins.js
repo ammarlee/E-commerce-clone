@@ -79,7 +79,6 @@ export  default{
        async addToCart(products){
         try {
          const response = await ApiServices.addTocart({...products,user:this.user})
-         console.log(response);
           this.alertDisplay('success','added to cart',2000)
           this.$store.commit('cartCount')
           this.rightDrawer =!this.rightDrawer

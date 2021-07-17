@@ -1,18 +1,21 @@
 <template>
   <div class="about text-center danger--text">
- 
-    <div class="erro pb-10 " v-if="!cart">
+    <div class="erro pb-10 " v-if="cart && cart.products &&cart.products.length ==0  ">
       <div style="height:400px;margin:10px auto; width:600px;">
         <v-img
+        id="mainImg"
           src="./cart.png"
           style="width:100% ; height:100%"
           alt="name"
         ></v-img>
-        <h4 class="mt-5">
+        
+
+        <h4 class="mt-5" id="emptyMsg">
           <router-link to="/">
             <v-btn class="primary">shopping now</v-btn>
           </router-link>
         </h4>
+     
       </div>
     </div>
     <!-- overlay -->
@@ -21,8 +24,8 @@
     </v-overlay>
 
     <div class="cart" v-if="cart">
-      <v-row>
-        <v-col cols="12" md="7" sm="7" v-if="cart.products" offset-sm="1">
+      <v-row v-if="cart.products">
+        <v-col cols="12" md="7" sm="7"  offset-sm="1">
           <div
             v-for="item in cart.products"
             :key="item.id"
@@ -78,10 +81,10 @@
           </div>
         </v-col>
 
-        <v-col cols="12" md="3" sm="3">
+        <v-col cols="12" md="3" sm="3" class="pb-0">
           <div
             class="payment pt-3 rounded-lg  d-lg  "
-            v-if="cart"
+            v-if="cart.products &&cart.products.length >0"
             style="margin-top:26px;"
           >
             <h4 class="font-weight-bold ">
@@ -266,6 +269,7 @@ export default {
           this.overlay = false;
           this.errors = true;
           this.cart = null;
+          this.$store.dispatch("setCart", []);
           this.$store.commit("resetcartCount", 0);
         } else {
           let productsList = res.data.data.products;
@@ -277,9 +281,6 @@ export default {
           const sumItem = productsList.reduce((accumulator, currentValue) => {
             return accumulator + currentValue.quantity;
           }, 0);
-          this.cart = res.data.data;
-          this.total = totalcart;
-          this.sum = sumItem;
           this.overlay = false;
           this.updateCardInfo(res.data.data, totalcart, sumItem);
         }
@@ -320,7 +321,7 @@ export default {
 <style lang="scss">
 .about {
   background: #eaeded;
-  min-height: 800px;
+  // min-height: 600px;
 }
 .col,
 title {
@@ -371,7 +372,16 @@ title {
   //   width: 80%;
   //   height: 113px;
   //   font-size: 18px;
-
+ .erro{
+     #mainImg{
+    width:40% !important
+  }
+    #emptyMsg{
+      position: absolute !important;
+      left: 25%;
+      
+    }
+  }
   // }
   #name {
     font-size: 8px !important;
