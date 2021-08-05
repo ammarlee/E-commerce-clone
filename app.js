@@ -16,11 +16,13 @@ const adminRoutes = require(path.join(__dirname,'./routes/admin'))
 
 const cardRoutes = require(path.join(__dirname,'./routes/card'))
 const categoryRoutes = require(path.join(__dirname,'./routes/category'))
+const couponRoutes = require(path.join(__dirname,'./routes/Coupon'))
 const userRoutes = require(path.join(__dirname,'./routes/user'))
 const ordersRoutes = require(path.join(__dirname,'./routes/orders'))
 var MongoDBStore = require('connect-mongodb-session')(session)
 const cookieParser = require('cookie-parser')
 const User = require(path.join(__dirname,'./models/user'))
+const Payments = require(path.join(__dirname,'./models/Payments'))
 const MONGODB_URI ='mongodb+srv://ammarlee:tonightwewilldoit@cluster0.j47ye.mongodb.net/vueproject'; 
 const stripe = require('stripe')('sk_test_51HW8XsFcp3bB6NpnSJmsJgGkxC9zyhQxphOeKnPZMvBFrxmhrjsdCTTkY3JY3PPxgkhX3ybehnzPUJMyeJFo4tOX00YXDpMXdU');
 var app = express();
@@ -86,8 +88,19 @@ app.use((req,res,next)=>{
 
 app.post('/checkPayment',async(req, res, next)=>{
   try {
-    const session =await stripe.checkout.sessions.retrieve(req.body.id)
-    res.status(200).json(session)
+    const {userId,id}=req.body
+    const session =await stripe.checkout.sessions.retrieve(id)
+    if(session){
+      const response=await Payments.findOne({paymentId: session.id})
+      if(response){
+        res.status(500).json({msg:`this is used before`})
+      }else{
+
+        const newPayment = await Payments.create({paymentId:session.id,userId,date:new Date(),total:session.amount_subtotal})
+        await newPayment.save()
+        res.status(200).json(session)
+      }
+    } 
     
   } catch (error) {
     console.log(error);
@@ -108,17 +121,16 @@ app.post('/create-session', async (req, res) => {
               name: 'testing checkout with stripe',
               images: ['https://i.imgur.com/EHyR2nP.png'],
             },
-            unit_amount: total.total,
+            unit_amount: +total.total,
           },
           quantity: req.body.quantity,
         },
       ],
       mode: 'payment',
-      success_url: `${currentUrl}/{CHECKOUT_SESSION_ID}`,
+      success_url: `${currentUrl}/checkpayment/{CHECKOUT_SESSION_ID}`,
       // success_url: `${currentUrl}/success?id=${CHECKOUT_SESSION_ID}`,
       cancel_url: `${currentUrl}`,
     });
-    console.log(session);
     
     res.json({ id: session.id });
     
@@ -129,6 +141,7 @@ app.post('/create-session', async (req, res) => {
 });
 //  finished work with strip
 app.use(categoryRoutes)
+app.use(couponRoutes)
 app.use(productsRoutes)
 app.use(adminRoutes)
 app.use(authRoutes)

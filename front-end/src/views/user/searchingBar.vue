@@ -1,5 +1,6 @@
 <template>
         <v-autocomplete
+        class="d-none d-sm-inline"
         v-model="model"
         :items="items"
         :loading="isLoading"

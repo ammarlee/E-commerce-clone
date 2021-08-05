@@ -4,20 +4,24 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container class="text-capitalize ">
-      <h1 class="font-weight-bold">create review</h1>
+      <h1 class="font-weight-bold text-center mb-3 mt-5 ">create review</h1>
+        <v-divider></v-divider>
+
       <v-form v-if="getproducts" @submit.prevent="createView()">
         <div class="product">
           <v-row>
-            <v-col cols="4">
+             <v-col cols="12" class="text-center " >
+              <h2>{{ getproducts[0].name }}</h2>
+            </v-col>
+            <v-col cols="12">
               <v-img
+              contain
                 :src="getproducts[0].img[0]"
                 style="max-height:200px"
                 alt="img"
               ></v-img>
             </v-col>
-            <v-col cols="4" offset-md="2" offset-sm="2">
-              <p>{{ getproducts[0].name }}</p>
-            </v-col>
+           
           </v-row>
         </div>
         <v-divider></v-divider>
@@ -77,7 +81,7 @@
             ></v-text-field>
             <!-- </v-col> -->
           </div>
-          <v-btn type="submit">
+          <v-btn type="submit" >
             submit
           </v-btn>
         </div>
@@ -107,8 +111,9 @@ export default {
   },
 
   methods: {
-   
     async createView() {
+      if(this.review.last &&this.review.header) {
+
       this.overlay = true;
       const data = {
         productId: this.getproducts[0]._id,
@@ -130,9 +135,15 @@ export default {
           this.alertError(er)
         this.overlay = false;
       }
+      }
+
     },
   },
   computed: {
+    isValid(){
+      return this.review.last && this.review.header? 'true':'false'
+      
+    },
     getproducts() {
       return this.$store.getters.getProducts.posts.filter((p) => {
         return p._id == this.$route.params.id;

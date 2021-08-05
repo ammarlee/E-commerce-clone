@@ -8,6 +8,9 @@
            <v-btn text to="/products" title="products" class=" text-none font-weight-bold">
           <v-icon x-large color="white">mdi-shopping-outline</v-icon>
           </v-btn>
+          <v-btn text to="/coupon" title="coupon" class=" text-none font-weight-bold">
+          <v-icon x-large color="orange">mdi-shopping-outline</v-icon>
+          </v-btn>
         </v-toolbar-items>
         <v-spacer></v-spacer>
       <v-menu v-if="getUser" bottom min-width="200px" rounded offset-y>

@@ -1,33 +1,35 @@
 <template>
   <div>
-    <v-toolbar color="orange accent-1 ">
+    <v-toolbar light>
       <v-app-bar-nav-icon
-        style="cursor: pointer;"
+        style="cursor: pointer"
         class="pt-2"
         @click="openDrawer"
       ></v-app-bar-nav-icon>
       <v-toolbar-title
-        style="height:67px"
-        class="title mr-2 pt-5 pl-0 pr-5
-      d-none  d-sm-inline"
+        style="height: 67px"
+        class="title mr-2 pt-5 pl-0 pr-5"
       >
-        <router-link to="/" tag="span" style="cursor:pointer">
+        <router-link to="/" tag="span" style="font-size: 40px;" class="fontName pointer headers-title black--text ">
           Shopping
         </router-link>
       </v-toolbar-title>
       <!-- THE SEARCHING BAR  -->
-      <searching-component></searching-component>
+
+      <searching-component ></searching-component>
       <!-- THE CATEGORY -->
-      <template v-slot:extension>
-        <category-component class="d-block "></category-component>
-      </template>
+
+      <!-- <template v-slot:extension>
+        <category-component class="d-block"></category-component>
+      </template> -->
 
       <v-toolbar-title
-        class="title ml-1 d-none  d-sm-inline"
-        style="height:67px"
+        class="title ml-1 d-none d-sm-inline"
+        style="height: 67px"
+        light
       >
         <router-link to="/card" v-if="getUser" tag="span" class="pt-6 headline">
-          <v-btn  icon text id="shop" class="mt-4">
+          <v-btn icon text id="shop" class="mt-4">
             <v-badge
               color="green"
               overlap
@@ -37,18 +39,18 @@
               offset-y="10"
               value="1"
             >
-              <v-icon large class="white--text"> mdi-cart</v-icon>
+              <v-icon large class=""> mdi-cart</v-icon>
             </v-badge>
           </v-btn>
         </router-link>
 
         <router-link
           v-if="!getUser"
-          to="/login" 
+          to="/login"
           tag="span"
-          class="pt-6  mr-1 ml-1 headline"
+          class="pt-6 mr-1 ml-1 headline"
         >
-          <v-btn class="white--text mt-4" outlined>
+          <v-btn class=" mt-4 fontName" outlined>
             <v-icon> mdi-login</v-icon>
             login
           </v-btn>
@@ -57,12 +59,12 @@
         <v-menu v-if="getUser" bottom min-width="200px" rounded offset-y>
           <template v-slot:activator="{ on }">
             <v-btn icon class="d-none d-sm-inline mt-1" v-on="on">
-              <v-icon large class="white--text" v-if="!getUser.img">
-                mdi-account-circle
+              <v-icon large class="" v-if="!getUser.img">
+                mdi-account-outline
               </v-icon>
               <v-avatar color="green" size="48" v-if="getUser.img">
                 <v-img v-if="getUser.img" :src="getUser.img"></v-img>
-                <span v-else class="white--text headline">p</span>
+                <span v-else class=" headline">p</span>
               </v-avatar>
             </v-btn>
           </template>
@@ -70,10 +72,12 @@
             <v-list-item-content class="justify-center">
               <div class="mx-auto text-center">
                 <router-link to="/profile">
-                  <v-avatar color="green">
-                    <v-img v-if="getUser.img" :src="getUser.img"></v-img>
-                    <span v-else class="white--text headline">P</span>
+                  <v-avatar color="green" v-if="getUser.img">
+                    <v-img  :src="getUser.img"></v-img>
                   </v-avatar>
+                    <v-icon large  v-else>
+                mdi-account-outline
+              </v-icon>
                 </router-link>
                 <h3>{{ getUser.name }}</h3>
                 <p class="caption mt-1">
@@ -110,12 +114,12 @@
 // import axios from 'axios'
 import Functions from "../../../server/Authantication-Api";
 import { mapGetters } from "vuex";
-import Category from "../Category";
+// import Category from "../Category";
 import searchingBar from "./searchingBar";
 export default {
   name: "navbar",
   components: {
-    "category-component": Category,
+    // "category-component": Category,
     "searching-component": searchingBar,
   },
   data() {
@@ -177,7 +181,6 @@ export default {
     menuItems() {
       if (this.isLoggedIn) {
         let items = [
-         
           {
             id: 51242,
             page: "cart",
@@ -191,7 +194,6 @@ export default {
             link: "/orders",
             icon: "mdi-playlist-check",
           },
-         
         ];
         return items;
       } else {

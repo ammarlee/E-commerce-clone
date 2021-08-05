@@ -1,8 +1,6 @@
 <template>
   <div>
-     
-  
-    <v-row>
+    <v-row >
       <v-col class="d-flex justify-center">
         <v-data-table
     :headers="headers"
@@ -31,6 +29,11 @@
       
       </v-toolbar>
     </template>
+     <template v-slot:[`item.name`]="{ item }">
+       <p style="cursor: pointer" @click="details(item)">
+         {{item.name}}
+       </p>
+    </template>
       <template v-slot:[`item.img`]="{ item }">
         <v-img v-if="item.img" aspect-ratio="2"  contain :src="item.img"></v-img>
     </template>
@@ -48,6 +51,7 @@ export default {
   data() {
     return {
       order: [],
+       curr: 1,
       total:null,
       date:null,
         headers: [
@@ -56,6 +60,7 @@ export default {
         { text: 'quantity', value: 'quantity' ,align: 'center',class:['pink--text','text-capitalize']},
         { text: 'price', value: 'price',align: 'center',class:['pink--text','text-capitalize'] },
         { text: 'img', value: 'img',align: 'center', class:['pink--text','text-capitalize']},
+        { text: 'state', value: 'state',align: 'center', class:['pink--text','text-capitalize']},
       ],
     }
   },
@@ -68,6 +73,20 @@ export default {
     } catch (error) {
       this.errors = error.response;
     }
+  },
+  methods: {
+    details(item) {
+      this.$router.push("/details/" + item.productId);
+    },
+     stepComplete(step) {
+            return this.curr > step
+        },
+        stepStatus(step) {
+            return this.curr > step ? 'green' : 'blue'
+        },
+        done() {
+            this.curr = 5
+        }
   },
 };
 </script>

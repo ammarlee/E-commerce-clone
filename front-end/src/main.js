@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 import socktConnect from "socket.io-client";
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import './assets/global.css';
 import Mixins from './plugins/mixins';
 import VueImg from 'v-img';
 Vue.use(VueImg);

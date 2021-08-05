@@ -9,6 +9,7 @@ const Cart =require(path.join(__dirname,'../../models/cart'))
     const {name,price,quantity,description,category,user} =req.body
           const img = req.body.img[0]
           const productId = req.body._id
+          console.log(`product id ${productId}`);
 
           if (!user) {
             return res.status(500).json({
@@ -18,14 +19,18 @@ const Cart =require(path.join(__dirname,'../../models/cart'))
           const userId = req.body.user._id
   try {
       const product_id = await Product.findOne({_id:productId})
+
       let cart = await Cart.findOne({ userId });
       if (cart) {
         let itemIndex = cart.products.findIndex(p => p.productId == productId);
         if (itemIndex > -1) {
+          console.log('exist');
           let productItem = cart.products[itemIndex];
           productItem.quantity += 1;
           cart.products[itemIndex] = productItem;
         } else {
+          console.log(' not exist !');
+
           //product does not exists in cart, add new item
           cart.products.push({ productId, quantity:1, name, price,description,img,category });
         }
@@ -45,6 +50,52 @@ const Cart =require(path.join(__dirname,'../../models/cart'))
      return res.status(500).send("Something went wrong");
     }
          
+  }
+  
+  exports.increaseCard = async (req,res,next)=>{
+    const {productId,quantity,userId} = req.body
+
+    let cart = await Cart.findOne({ userId });
+    if (cart) {
+      let itemIndex = cart.products.findIndex(p => p.productId == productId);
+      if (itemIndex > -1) {
+        let productItem = cart.products[itemIndex];
+        productItem.quantity += 1;
+        cart.products[itemIndex] = productItem;
+      }
+      cart = await cart.save();
+      return res.status(201).send(cart);
+    }
+  }
+  exports.decreaseCard = async (req,res,next)=>{
+    const {productId,userId} = req.body
+
+    let cart = await Cart.findOne({ userId });
+    if (cart) {
+      let itemIndex = cart.products.findIndex(p => p.productId == productId);
+      if (itemIndex > -1) {
+        let productItem = cart.products[itemIndex];
+        productItem.quantity -= 1;
+        cart.products[itemIndex] = productItem;
+      }
+      cart = await cart.save();
+      return res.status(201).send(cart);
+    }
+  }
+  exports.setQuantity = async (req,res,next)=>{
+    const {productId,userId,quantity} = req.body
+
+    let cart = await Cart.findOne({ userId });
+    if (cart) {
+      let itemIndex = cart.products.findIndex(p => p.productId == productId);
+      if (itemIndex > -1) {
+        let productItem = cart.products[itemIndex];
+        productItem.quantity = quantity;
+        cart.products[itemIndex] = productItem;
+      }
+      cart = await cart.save();
+      return res.status(201).send(cart);
+    }
   }
   
   exports.getUserCart=(req,res,next)=>{
