@@ -25,7 +25,7 @@ const routes = [
       footer: footer,
     },
   },{
-    path: "/:id",
+    path: "/checkpayment/:id",
     name: "payment",
     beforeEnter:guardPage,
     components: {
@@ -42,7 +42,14 @@ const routes = [
       default:()=>{ return import("../views/user/CategoryProduct.vue")},
       header,footer
     }
-
+  },
+  {
+    path: "/chart/chart",
+    name: "chart",
+    components:{
+      default:()=>{ return import("../views/Chart/Chart.vue")},
+      header,footer
+    }
   },
   {
     path: "/profile",

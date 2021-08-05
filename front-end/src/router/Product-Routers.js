@@ -14,6 +14,15 @@ export default[
         }
       },
       {
+        path: "/checkout",
+        name: "checkout",
+        beforeEnter: guardPage,
+        components:{
+          default:()=>{ return import("../views/product/Checkout.vue")},
+          header,footer
+        }
+      },
+      {
         path: "/details/:id",
         name: "details",
         // query:new Date().getTime(),
@@ -53,14 +62,5 @@ export default[
         header,footer
       }
       },
-      {
-        path: "/add",
-        name: "add",
-        beforeEnter: guardPage,
-        components:{
-          default:()=>{ return import("../views/user/Add.vue")},
-          header,footer
-        }
-    
-      },
+   
 ]

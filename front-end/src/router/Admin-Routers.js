@@ -23,6 +23,13 @@ export default[
             default:()=>{ return import("../views/admin/Products.vue")},
           }
           }, 
+          {
+            path: "/coupon",
+            name: "Coupon",
+          components:{
+            default:()=>{ return import("../views/admin/Coupon.vue")},
+          }
+          },
 
       ]
       },

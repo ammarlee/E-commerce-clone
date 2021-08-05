@@ -4,61 +4,66 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-container v-if="!overlay" class="thecontainer">
-      <v-row v-if="products &&products.length>0">
+      <v-row v-if="products && products.length > 0">
         <v-col
           cols="12"
           sm="6"
           md="4"
-          v-for="pro in products"
-          :key="pro._id"
+          class="pointer mb-2"
+          v-for="item in products"
+          :key="item._id"
         >
           <v-hover v-slot="{ hover }">
-            <v-card class="mx-auto" color="grey lighten-4" max-width="600">
-              <v-img
-                :src="pro.img[0]"
-                contain
-                max-height="260"
-                aspect-ratio="1.4"
-                @click.prevent="details(pro._id)"
-              >
-                <v-expand-transition>
+            <div>
+              <div>
+                <v-img
+                  :src="item.img[0]"
+                  contain
+                  max-height="360"
+                  aspect-ratio="1.4"
+                  @click.prevent="details(item._id)"
+                >
                   <div
                     v-if="hover"
-                    class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-                    style="height: 100%;"
+                    class="d-flex justify-center align-center hoverdiv"
+                    style="height: 100%"
                   >
-                    ${{ pro.price }}
+                    <transition
+                      appear
+                      enter-active-class="animate__animated animate__fadeIn"
+                      leave-active-class="animate__animated animate__fadeOutDown"
+                      mode="out-in"
+                    >
+                      <div
+                        class="overlaydiv divopacity"
+                        min-height="100"
+                        min-width="100"
+                      ></div>
+                    </transition>
                   </div>
-                </v-expand-transition>
-              </v-img>
-              <v-card-text class="pt-6" style="position: relative;">
-                <v-btn
-                  absolute
-                  color="orange"
-                  class="white--text"
-                  @click.prevent="addToCart(pro)"
-                  fab
-                  large
-                  right
-                  top
-                >
-                  <v-icon>mdi-cart</v-icon>
-                </v-btn>
-                <div
-                  class="font-weight-light thepragraphgh grey--text title mb-2"
-                >
-                  For the perfect shopping
+                </v-img>
+                <div class="pt-6 text-center">
+                  <h4 class="mb-2 text-truncate detailsFont">
+                        {{ item.name }}
+                      </h4>
+                      <p class="detailsFont">${{item.price}}</p>
+                  <div class="d-flex justify-center aligen-center">
+                    <v-btn
+                      color="black"
+                      class="white--text"
+                      @click.prevent="addToCart(item)"
+                    >
+                      <v-icon>mdi-cart</v-icon>
+                      add to card
+                    </v-btn>
+                  </div>
                 </div>
-                <h6
-                  class="display-1 theproductName font-weight-light orange--text mb-2"
-                >
-                  {{ pro.name }}
-                </h6>
-              </v-card-text>
-            </v-card>
+              </div>
+            </div>
           </v-hover>
         </v-col>
       </v-row>
+
       <v-row v-if="products">
         <v-col v-if="products.length == 0">
           <h1 class="text-center font-weight-bold pink--text">
@@ -75,11 +80,12 @@ import Functions from "../../../server/Products-Api";
 export default {
   data() {
     return {
+      overlay2: true,
       alldata: null,
-      products:null,
+      products: null,
     };
   },
- 
+
   computed: {
     param() {
       return this.$route.params.name;
@@ -93,50 +99,42 @@ export default {
     //   });
     // },
     getProducts() {
-      return this.$store.getters.getProducts
+      return this.$store.getters.getProducts;
     },
-    
   },
-  mounted () {
+  mounted() {
     if (this.getProducts) {
-             this.fetchData()
+      this.fetchData();
     }
-    
   },
   watch: {
-    getProducts:{
-      handler: function(){
-        this.fetchData()
-        
-
+    getProducts: {
+      handler: function () {
+        this.fetchData();
       },
-      deep:true,
-    }
+      deep: true,
+    },
   },
-  
 
   methods: {
-    fetchData(){
-      if (this.getProducts && this.getProducts.posts ) {
+    fetchData() {
+      if (this.getProducts && this.getProducts.posts) {
         // debugger;
-        
-        this.products=this.getProducts.posts.filter((p) => {
+
+        this.products = this.getProducts.posts.filter((p) => {
           return p.category == this.param;
         });
-         }
-
+      }
     },
 
     async deleteOne(productId) {
       try {
         this.overlay = true;
-
         await Functions.deleteProduct(productId);
         this.dialogNotifySuccess("deleteed successfully");
         let test = this.alldata.filter((p) => {
           return p._id.toString() !== productId.toString();
         });
-        console.log(test);
         this.alldata = test;
         this.overlay = false;
       } catch (error) {
@@ -153,6 +151,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.overlaydiv {
+  min-width: 100%;
+  min-height: 100%;
+  transition: all 5s ease-in-out;
+}
 .v-card--reveal {
   align-items: center;
   bottom: 0;

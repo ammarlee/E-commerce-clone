@@ -65,7 +65,7 @@
       right
       width="100"
       v-model="rightDrawer"
-      style="position: absolute"
+      style="position: fixed"
       class="white black--text"
     >
     <h4 class="px-4">shopping</h4>
@@ -105,7 +105,12 @@
    
       <router-view name="header"> </router-view>
     <v-main >
-      <transition name="slide" mode="out-in">
+      <!-- <transition name="slide" mode="out-in">
+         <router-view></router-view>
+      </transition> -->
+      <transition   appear 
+        enter-active-class="animate__animated animate__fadeInRight"
+       leave-active-class="animate__animated animate__fadeOut" mode="out-in">
          <router-view></router-view>
       </transition>
     </v-main>

@@ -6,6 +6,17 @@ class Card {
 static addTocart(payload) {
     return axios().post(`add/addCart`, payload);
   }
+  static increaseQuantity(payload){
+    return axios().post(`increase/card`, payload)
+  }
+  
+  static decreaseQuantity(payload){
+    return axios().post(`decrease/card`, payload)
+  }
+  
+  static setQuantity(payload){
+    return axios().post(`setQuantity/card`, payload)
+  }
   static checkPayment(payload) {
     return axios().post(`checkPayment`,payload);
   }

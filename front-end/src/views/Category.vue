@@ -7,7 +7,7 @@
       slider-color="blue-grey"
       show-arrows
     >
-      <v-tabs-slider color="white "></v-tabs-slider>
+      <v-tabs-slider color="orange "></v-tabs-slider>
       <v-tab
       class="black--text text-capitalize"
         v-for="item in category" :key="item._id"

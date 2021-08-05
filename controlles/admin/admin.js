@@ -121,6 +121,6 @@ exports.deleteProduct = (req, res, next) => {
         msg: "you coludnt  have deleted the product",
       });
     });
-};
+  git };
 
 

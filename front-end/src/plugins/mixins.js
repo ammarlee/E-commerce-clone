@@ -78,9 +78,11 @@ export  default{
   
        async addToCart(products){
         try {
-         const response = await ApiServices.addTocart({...products,user:this.user})
+          const user = this.currentUser
+          const response = await ApiServices.addTocart({...products,user})
           this.alertDisplay('success','added to cart',2000)
           this.$store.commit('cartCount')
+          this.$emit('closeDia')
           this.rightDrawer =!this.rightDrawer
           this.$store.dispatch('findCart',response.data.userId)
   

@@ -10,14 +10,16 @@ import CardFunctions from "../../server/Card-Api";
 export default {
   async mounted() {
     try {
-      console.log();
-      await Functions.checkPayment({ id: this.$route.params.id });
-      console.log("this.cart", this.cart);
+      await Functions.checkPayment({
+        id: this.$route.params.id,
+        userId: this.currentUser._id,
+      });
       this.makeorder({ cart: this.cart, total: this.total });
       this.clearCart(this.cart);
       this.$router.push("/orders");
     } catch (error) {
-      console.log(error);
+      this.dialogNotifyError(error.response.data.msg);
+      this.$router.push("/card");
     }
   },
   computed: {
@@ -58,7 +60,7 @@ export default {
       try {
         this.overlay = true;
         await CardFunctions.clearTheCart(cart);
-        this.updateCardInfo([], null, 0);
+        this.updateCardInfo(null, null, 0);
         this.dialogNotifySuccess("thanks for your payment ");
       } catch (error) {
         this.errors = error.response.data;
