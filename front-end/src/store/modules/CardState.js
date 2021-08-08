@@ -4,12 +4,17 @@ const state = {
   cart:[],
   cartCount:0,
   totalPrice:null,
+  shipping:null,
 
 
 };
 const getters = {
   getTotalPrice(state){
     return state.totalPrice
+  },
+  shipping(state){
+    let getshipping= localStorage.getItem('setShippingData')
+    return state.shipping ||JSON.parse(getshipping) 
   },
   getCartCount(state){
     return state.cartCount
@@ -19,6 +24,12 @@ const getters = {
   },
 };
 const mutations = {
+  setShippingData(state,payload){
+    localStorage.setItem("setShippingData",JSON.stringify(payload));
+    state.shipping = payload
+
+
+  },
   
   addToCart(state,payload){
     state.cart.push(payload)

@@ -8,6 +8,7 @@ const OrderSchema = new Schema({
         ref: "User"
       },
       items: {},
-      orderLocation:{}
+      orderLocation:{},
+      shipping:{}
 })
 module.exports = mongoose.model('Order', OrderSchema);

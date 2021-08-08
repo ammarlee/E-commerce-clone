@@ -24,9 +24,9 @@
 
             <v-stepper-content step="1" class="stepper-head">
               <div class="mt-3">
-                <h3 class="mb-2">
+                <h5 class="mb-2">
                   write your email to be able to contact with you
-                </h3>
+                </h5>
                 <v-row>
                   <v-col cols="6">
                     <v-text-field
@@ -51,14 +51,9 @@
             </v-stepper-step>
 
             <v-stepper-content step="2">
-              <!-- <v-row dense>
-              <v-col cols="6" class="mt-6 ml-1">
-                <v-select :items="items" label="Solo field" solo></v-select>
-              </v-col>
-            </v-row> -->
               <!-- second  -->
               <v-row dense>
-                <v-col cols="6">
+                <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     outlined
                     dense
@@ -66,7 +61,7 @@
                     v-model="shipping.firstName"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     outlined
                     dense
@@ -124,7 +119,7 @@
                     v-model="shipping.Country"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     outlined
                     dense
@@ -132,7 +127,7 @@
                     v-model="shipping.state"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     outlined
                     dense
@@ -149,12 +144,12 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <v-btn class="black white--text" @click="e6 = 3">
-                Continue
+               <v-btn color="black white--text" @click="handlePayment">
+                <v-icon>mdi-cash</v-icon>checkout
               </v-btn>
             </v-stepper-content>
 
-            <v-stepper-step
+            <!-- <v-stepper-step
               :complete="e6 > 3"
               class="stepper-head"
               step="3"
@@ -172,15 +167,15 @@
               <v-btn color="black white--text" @click="handlePayment">
                 <v-icon>mdi-cash</v-icon>checkout
               </v-btn>
-            </v-stepper-content>
+            </v-stepper-content> -->
           </v-stepper>
         </v-col>
         <v-col cols="12" sm="4" md="4">
           <v-card class="pa-2 pl-4 pr-4">
             <v-row dense class="text-capitalize font-weight-bold">
-              <v-col cols="6" class="">order summery</v-col>
+              <v-col cols="12" sm="6" md="6" class="">order summery</v-col>
               <v-col
-                cols="6"
+                cols="12" sm="6" md="6"
                 @click="goToCard"
                 class="
                   text--body-2
@@ -202,7 +197,7 @@
                       style="width: 100%; height: 100%"
                     />
                   </v-col>
-                  <v-col cols="6" class="d-flex align-center text-body-2">
+                  <v-col cols="12" sm="6" md="6" class="d-flex align-center text-body-2">
                     {{ item.name }}
                   </v-col>
 
@@ -253,7 +248,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "../../../server/MainApi";
 import { loadStripe } from "@stripe/stripe-js";
 
 export default {
@@ -307,6 +302,7 @@ export default {
         });
 
         const session = await response;
+        this.$store.commit("setShippingData",this.shipping)
         
         await stripe.redirectToCheckout({
           sessionId: session.data.id,
@@ -330,7 +326,7 @@ export default {
 .stepper-head {
   text-transform: capitalize;
   font-weight: bold;
-  font-family: "Euphoria Script" !important;
+   font-family: 'Caudex', serif !important;
   font-size: 30px;
 }
 

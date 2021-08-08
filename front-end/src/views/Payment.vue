@@ -35,6 +35,10 @@ export default {
     sum() {
       return this.$store.getters.getCartCount;
     },
+    shipping() {
+      return this.$store.getters.shipping;
+      
+    }
   },
   methods: {
     async makeorder() {
@@ -46,7 +50,10 @@ export default {
           cart: this.cart,
           total: this.total,
           location: orderLocation || {},
+          shipping: this.shipping,
         });
+        this.$store.commit("setShippingData",null)
+
       } catch (error) {
         this.errors = error;
       }

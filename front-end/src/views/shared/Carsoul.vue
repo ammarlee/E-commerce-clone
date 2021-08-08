@@ -1,7 +1,7 @@
 <template>
 <div>
 
-  <v-carousel cycle height="600" hide-delimiter-background  :show-arrows="false">
+  <v-carousel cycle  hide-delimiter-background  :show-arrows="false">
     <v-carousel-item v-for="(slide, i) in imgs" :key="i">
       <v-sheet height="100%">
         <v-row class="fill-height fill-width" align="center" justify="center">
