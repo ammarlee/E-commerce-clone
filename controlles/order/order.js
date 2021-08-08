@@ -7,7 +7,7 @@ const PDFDocument = require("pdfkit");
 
 exports.makeOrder=async (req,res,next)=>{
     const userId = req.body.cart.userId
-    const {cart,total,location}=req.body
+    const {cart,total,location,shipping}=req.body
     console.log(location);
     let date = new Date()
     try {
@@ -15,9 +15,9 @@ exports.makeOrder=async (req,res,next)=>{
         userId,
         items:{products:cart.products,total:total,date},
         orderLocation:location,
+        shipping
       })
       const  newOne = await newOrder.save()
-      console.log(newOne);
      return res.status(200).json({
        order:newOne,
        success:true

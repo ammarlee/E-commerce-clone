@@ -105,9 +105,7 @@ export default {
   async mounted() {
     this.overlay = true;
     try {
-      debugger
       let res = await Functions.getSingleProduct(this.id);
-      console.log(res);
       this.products = res.data.product;
       this.productImg = this.products.img[0];
       this.overlay = false;

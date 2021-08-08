@@ -72,10 +72,9 @@ export default {
   },
   methods: {
     async download(item) {
-      let order = this.orders.find((i) => {
+     this.orders.find((i) => {
         return i._id.toString() == item._id.toString();
       });
-      console.log(order);
       this.$router.push('/showOrder/'+item._id);
       
 
@@ -85,7 +84,6 @@ export default {
   async mounted() {
     try {
       const res = await Functions.getOrders(this.$store.getters.getUser._id);
-      console.log(res);
       this.orders = res.data.orders;
     } catch (error) {
       this.errors = error.response.err.msg;

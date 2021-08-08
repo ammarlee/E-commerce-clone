@@ -199,8 +199,8 @@
                   dense
                   class="ShippingDetails text-left text-capitalize"
                 >
-                  <v-col cols="6" class="text-body-2" dense>country </v-col>
-                  <v-col cols="6" class="text-body-2" dense>
+                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>country </v-col>
+                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>
                     <v-text-field
                       v-model="shipping.country"
                       label="country"
@@ -209,10 +209,11 @@
                       hide-details
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="text-body-2" dense
+                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense
                     >state/province
                   </v-col>
-                  <v-col cols="6" class="text-body-2" dense>
+                  
+                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>
                     <v-text-field
                       v-model="shipping.state"
                       label="state/province"
@@ -221,8 +222,9 @@
                       hide-details
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="text-body-2" dense>Suburb/city </v-col>
-                  <v-col cols="6" class="text-body-2" dense>
+                  
+                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>Suburb/city </v-col>
+                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>
                     <v-text-field
                       hide-details
                       v-model="shipping.city"
@@ -231,10 +233,10 @@
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="text-body-2" dense
+                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense
                     >Zip/postcode
                   </v-col>
-                  <v-col cols="6" class="text-body-2" dense>
+                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>
                     <v-text-field
                       hide-details
                       v-model="shipping.postcode"
@@ -370,75 +372,15 @@
           </v-btn>
               </span> -->
       <!-- start dialog  -->
-      <v-dialog v-model="dialog" width="600">
-        <v-card>
-          <v-container class="pb-0">
-            <v-form v-model="isValid">
-              <v-card-title class="font-weight-bold text-capitalize red--text">
-                payment information
-              </v-card-title>
-              <v-row dense>
-                <v-col cols="12" sm="4">
-                  <v-text-field
-                    label="name"
-                    readonly
-                    outlined
-                    dense
-                    v-model="order.name"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="4">
-                  <v-text-field
-                    label="total"
-                    readonly
-                    outlined
-                    dense
-                    v-model="order.total"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="4">
-                  <v-text-field
-                    label="count"
-                    readonly
-                    outlined
-                    dense
-                    v-model="order.count"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    hide-details
-                    label="address"
-                    outlined
-                    dense
-                    v-model="order.address"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col col="12">
-                  <div style="height: 200px">
+      <div v-if="showtheMap">
+        <v-col cols="12" sm="6" md="6" class="text-body-2" dense
+                    >location
+                  </v-col>
+                  <v-col  >
                     <app-map @location="userLocation($event)"></app-map>
-                  </div>
-                </v-col>
-              </v-row>
-
-              <v-row dense class="mt-5">
-                <v-col class="d-flex justify-end">
-                  <v-card-actions>
-                    <v-btn text color="red" @click="dialog = false"
-                      >cancel</v-btn
-                    >
-                    <v-btn text color="success" @click="handlePayment"
-                      >submit</v-btn
-                    >
-                  </v-card-actions>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
-        </v-card>
-      </v-dialog>
+                  </v-col>
+      </div>
+     
       <div></div>
     </v-container>
   </div>
@@ -457,6 +399,7 @@ export default {
   },
   data() {
     return {
+      showtheMap:false,
       location: [
         {
           name: "Home",

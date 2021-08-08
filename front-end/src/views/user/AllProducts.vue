@@ -52,7 +52,6 @@
                       contain
                       max-height="360"
                       aspect-ratio="1.4"
-                      @click.prevent="details(item._id)"
                     >
                     <div
                     v-if="hover"
