@@ -15,10 +15,12 @@ const xss = require('xss-clean')
 const productsRoutes =require(path.join(__dirname,'./routes/products'))
 const authRoutes = require(path.join(__dirname,'./routes/auth'))
 const adminRoutes = require(path.join(__dirname,'./routes/admin'))
+
 const cardRoutes = require(path.join(__dirname,'./routes/card'))
 const categoryRoutes = require(path.join(__dirname,'./routes/category'))
 const couponRoutes = require(path.join(__dirname,'./routes/Coupon'))
 const userRoutes = require(path.join(__dirname,'./routes/user'))
+
 const ordersRoutes = require(path.join(__dirname,'./routes/orders'))
 const paymentRoutes = require(path.join(__dirname,'./routes/payments'))
 
@@ -45,7 +47,7 @@ let cors = require('cors')
 // app.use(hamlet())
 app.use(morgan('dev'))
 const currentUrl = "http://localhost:8080"
-// const currentUrl = "https://full-meven-stack.herokuapp.com"
+// const currentUrl = "https://ammarshop.herokuapp.com/"
 
 app.use(mongoSanitize())
 app.use(xss())
@@ -101,12 +103,12 @@ app.use(compression())
 
 const port =process.env.PORT || 3000
 
-// if(process.env.NODE_ENV ==="production"){
-//   app.use(express.static(__dirname +"/dist/"))
-//   app.get(/.*/,(req,res)=>{
-//     res.sendFile(__dirname + '/dist/index.html' )
-//   })
-// }
+if(process.env.NODE_ENV ==="production"){
+  app.use(express.static(__dirname +"/dist/"))
+  app.get(/.*/,(req,res)=>{
+    res.sendFile(__dirname + '/dist/index.html' )
+  })
+}
 mongoose
   .connect(MONGODB_URI)
   .then(() => {

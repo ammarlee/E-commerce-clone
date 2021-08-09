@@ -42,8 +42,8 @@ new Vue({
   vuetify,
   render: h => h(App),
 async  mounted() {
-  let currentUrl = 'http://localhost:3000/'
-  // let currentUrl = 'https://ammarshop.herokuapp.com/'
+  // let currentUrl = 'http://localhost:3000/'
+  let currentUrl = 'https://ammarshop.herokuapp.com/'
   
   try{
     this.$store.commit('resetcartCount',0)

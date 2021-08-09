@@ -46,14 +46,6 @@
                 color="deep-purple"
                 v-model="user.phone"
               ></v-text-field>
-              <v-textarea
-                v-model="user.bio"
-                auto-grow
-                color="deep-purple"
-                label="Bio"
-                rows="1"
-              ></v-textarea>
-
               <span class="caption grey--text text--darken-1">
                 Please your information
               </span>

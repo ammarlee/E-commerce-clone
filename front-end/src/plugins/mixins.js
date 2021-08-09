@@ -77,8 +77,13 @@ export  default{
       },
   
        async addToCart(products){
+         const user = this.currentUser
+         if (!user) {
+          this.alertDisplay('error','please login to be able to add to card',2500)
+           
+         }else{
+
         try {
-          const user = this.currentUser
           const response = await ApiServices.addTocart({...products,user})
           this.alertDisplay('success','added to cart',2000)
           this.$store.commit('cartCount')
@@ -92,6 +97,7 @@ export  default{
           this.alertDisplay('error',error.response.data.msg,2500)
   
         }
+      }
       },
     },
     

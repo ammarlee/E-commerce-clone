@@ -1,6 +1,6 @@
 let io;
 const currentUrl = "http://localhost:8080"
-// const currentUrl = "https://full-meven-stack.herokuapp.com"
+// const currentUrl = "https://ammarshop.herokuapp.com/"
 module.exports = {
   init: httpServer => {
     io = require('socket.io')(httpServer,{

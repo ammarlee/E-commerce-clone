@@ -70,7 +70,7 @@
           <div class="pt-2 pb-5 text-capitalize">
             <p>
               <router-link to="/signup"
-                >haven`t account yet ?...
+                >haven`t account yet ?
                 <router-link to="/forgetPassword"
                   >forget password ?</router-link
                 ></router-link

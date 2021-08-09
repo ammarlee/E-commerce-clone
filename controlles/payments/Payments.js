@@ -1,12 +1,12 @@
 const path = require("path");
 const fs = require("fs");
-const Payments = require("../../models/Payments");
+const Payments = require(path.join(__dirname,"../../models/Payments"));
 const stripe = require("stripe")(
   "sk_test_51HW8XsFcp3bB6NpnSJmsJgGkxC9zyhQxphOeKnPZMvBFrxmhrjsdCTTkY3JY3PPxgkhX3ybehnzPUJMyeJFo4tOX00YXDpMXdU"
 );
 
-const currentUrl = "http://localhost:8080";
-// const currentUrl = "https://full-meven-stack.herokuapp.com"
+// const currentUrl = "http://localhost:8080";
+const currentUrl = "https://ammarshop.herokuapp.com/"
 
 exports.checkPayment = async (req, res, next) => {
   try {
@@ -53,7 +53,7 @@ exports.createSession = async (req, res) => {
       mode: "payment",
       allow_promotion_codes: true,
       line_items: item,
-      success_url: `${currentUrl}/checkpayment/{CHECKOUT_SESSION_ID}`,
+      success_url: `${currentUrl}checkpayment/{CHECKOUT_SESSION_ID}`,
       cancel_url: `${currentUrl}`,
     });
 

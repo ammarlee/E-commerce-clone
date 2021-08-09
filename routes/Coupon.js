@@ -1,7 +1,8 @@
 const express = require('express')
+const path = require('path')
 const router = express.Router()
-const CouponController = require('../controlles/coupon/Coupon.js')
-const Protect = require('./protect/protect')
+const CouponController = require(path.join(__dirname,'../controlles/coupon/Coupon.js'))
+const Protect = require(path.join(__dirname,'./protect/protect'))
 
 
 router.post('/create-coupon',CouponController.createCoupon)
