@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import Details from "../product/Details.vue";
+import Details from "./Details.vue";
 
 export default {
  components: {

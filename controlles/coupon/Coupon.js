@@ -1,10 +1,8 @@
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
-const Coupon = require("../../models/Coupon");
-const User = require("../../models/user");
-const clody = require("../cloud");
-const io = require("../../socket");
+const Coupon = require(path.join(__dirname,"../../models/Coupon"));
+
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch("5AX3QTWUTZ", "51ba31f56313488518c91d7571cddcde");
 

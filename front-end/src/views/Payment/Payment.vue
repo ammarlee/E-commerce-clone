@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import Functions from "../../server/Card-Api";
-import OrderFunctions from "../../server/Order_Api";
-import CardFunctions from "../../server/Card-Api";
+import Functions from "../../../server/Card-Api";
+import OrderFunctions from "../../../server/Order_Api";
+import CardFunctions from "../../../server/Card-Api";
 
 export default {
   async mounted() {

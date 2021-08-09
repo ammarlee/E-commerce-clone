@@ -1,6 +1,6 @@
 // import guardadmin from "./Guards/admin.js";
-import header from '../views/user/Add.vue'
-import footer from '../views/user/Footer.vue'
+import header from '../views/shared/NavBar.vue'
+import footer from '../views/shared/Footer.vue'
 import guardPage from "./Guards/guardPage";
 
 export default[
@@ -9,7 +9,7 @@ export default[
         name: "card",
         beforeEnter: guardPage,
         components:{
-          default:()=>{ return import("../views/product/Card.vue")},
+          default:()=>{ return import("../views/Card/Card.vue")},
           header,footer
         }
       },
@@ -18,7 +18,7 @@ export default[
         name: "checkout",
         beforeEnter: guardPage,
         components:{
-          default:()=>{ return import("../views/product/Checkout.vue")},
+          default:()=>{ return import("../views/Payment/Checkout.vue")},
           header,footer
         }
       },
@@ -37,7 +37,7 @@ export default[
         name: "orders",
       beforeEnter: guardPage,
       components:{
-        default:()=>{ return import("../views/product/Orders.vue")},
+        default:()=>{ return import("../views/Order/Orders.vue")},
         header,footer
     
       }
@@ -47,7 +47,7 @@ export default[
         name: "showOrder",
       beforeEnter: guardPage,
       components:{
-        default:()=>{ return import("../views/product/ShowOrder.vue")},
+        default:()=>{ return import("../views/Order/ShowOrder.vue")},
         header,footer
     
       }

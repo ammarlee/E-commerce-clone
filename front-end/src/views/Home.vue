@@ -45,7 +45,7 @@
 <script>
 import productFunctions from "../../server/Products-Api";
 import Carsoul from "./shared/Carsoul";
-import allProducts from "./user/AllProducts"
+import allProducts from "./product/AllProducts"
 import Categories from "./Category/Categories"
 
 export default {

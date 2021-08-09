@@ -8,7 +8,7 @@
           <v-img :src="slide.link" alt="welcome"></v-img>
           <v-fade-transition>
             <v-overlay absolute color="rgb(33 33 33)">
-              <div>
+              <div class="pa-2">
                 <h1 class="text-capitalize font-weight-bold fontName text-center">welcome to shopping</h1>
                 <p
                   class="text-body-2"
@@ -36,15 +36,16 @@ export default {
         imgs: [
         {
           title: "your bright future is our mission ",
-          link:'https://res.cloudinary.com/ammarleejot/image/upload/v1628010217/revolt-164_6wVEHfI-unsplash_useagp.jpg',
+          link:'https://res.cloudinary.com/ammarleejot/image/upload/v1628459808/revolt-164_6wVEHfI-unsplash-min_ejamp0.jpg',
         },
         {
           title: "the new way to learn properly with us  ",
-          link:'https://res.cloudinary.com/ammarleejot/image/upload/v1628010242/keagan-henman-xPJYL0l5Ii8-unsplash_gzwfxe.jpg',
+          link:'https://res.cloudinary.com/ammarleejot/image/upload/v1628459806/keagan-henman-xPJYL0l5Ii8-unsplash-min_czbuky.jpg',
         },
         {
           title: "online learning platform ",
-          link:require('@/assets/adele.jpg'),
+          link:'https://res.cloudinary.com/ammarleejot/image/upload/v1628459795/ales-nesetril-Im7lZjxeLhg-unsplash-min_hve4ce.jpg',
+          // link:require('@/assets/adele.jpg'),
         },
       ],
     }

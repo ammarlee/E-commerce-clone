@@ -2,8 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 // header and footer
-import header from '../views/user/Add.vue'
-import footer from '../views/user/Footer.vue'
+import header from '../views/shared/NavBar.vue'
+import footer from '../views/shared/Footer.vue'
 // auth guard
 import guardPage from "./Guards/guardPage";
 import AuthantactionRouters from "./Authantication-Routers"
@@ -29,7 +29,7 @@ const routes = [
     name: "payment",
     beforeEnter:guardPage,
     components: {
-      default:()=>{ return import("../views/Payment.vue")},
+      default:()=>{ return import("../views/Payment/Payment.vue")},
       header: header,
       footer: footer,
     },
@@ -39,7 +39,7 @@ const routes = [
     path: "/cat/:name",
     name: "cat",
     components:{
-      default:()=>{ return import("../views/user/CategoryProduct.vue")},
+      default:()=>{ return import("../views/product/CategoryProduct.vue")},
       header,footer
     }
   },
