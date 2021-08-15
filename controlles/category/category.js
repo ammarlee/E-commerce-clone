@@ -2,16 +2,36 @@ const path=require('path')
 const Category = require(path.join(__dirname, "../../models/category"));
 const { cloudinary } = require("../cloudinary");
 const Socket = require(path.join(__dirname, "../../socket"));
+const clody = require("../cloud");
 
 exports.editCategory = async(req,res,next)=>{
-  console.log('edit ');
-  const {_id,name}=req.body
-  console.log(_id,name);
-  try {
-    const category = await Category.findOneAndUpdate({_id},{name},{new:true})
-    Socket.getIO().emit("category", { action: "edit", category: category });
+  let categoryData = JSON.parse(req.body.category);
+  let {name,description,_id} = categoryData;
+  const files = req.files;
+  let imgUrl
+ 
+    try {
+      if (files.length < 0) {
+        const category = await Category.findOneAndUpdate({_id},{name,description},{new:true})
+        Socket.getIO().emit("category", { action: "edit", category: category });
+        res.status(200).json({category,success: true,msg:'you have updated'})
+        
+      }else {
+        const uploader = async (path) => await clody.uploads(path);
+        let urls = [];
+        for (let file of files) {
+          const { path } = file;
+          const newpath = await uploader(path);
+          urls.push(newpath);
+        }
+         imgUrl = urls.map((p) => {
+          return p.url;
+        });
 
-    res.status(200).json({category,success: true,msg:'you have updated'})
+        const category = await Category.findOneAndUpdate({_id},{name,description,img:imgUrl[0]},{new:true})
+        Socket.getIO().emit("category", { action: "edit", category: category });
+        res.status(200).json({category,success: true,msg:'you have updated'})
+      }
 
     
   } catch (error) {
@@ -21,12 +41,31 @@ exports.editCategory = async(req,res,next)=>{
   }
 }
 exports.createCategory = async(req, res, next) => {
-  let name= req.body.name;
+  let categoryData = JSON.parse(req.body.category);
+  let {name,description} = categoryData;
+  const files = req.files;
+  let imgUrl
+ 
     try {
-      const category = new Category({ name, });
-      const newone = await category.save();
-      Socket.getIO().emit("category", { action: "create", category: newone });
-      res.status(200).json({ newone, success: true,msg:"create new one" });
+      if(files && files.length > 0) {
+
+        const uploader = async (path) => await clody.uploads(path);
+        let urls = [];
+        for (let file of files) {
+          const { path } = file;
+          const newpath = await uploader(path);
+          urls.push(newpath);
+        }
+         imgUrl = urls.map((p) => {
+          return p.url;
+        });
+        const category = new Category({ name,description,img:imgUrl[0] });
+        const newone = await category.save();
+        Socket.getIO().emit("category", { action: "create", category: newone });
+        res.status(200).json({ category:newone, success: true,msg:"create new one" });
+      }else{
+        res.status(404).json({msg:'you have to upload photo'})
+      }
     } catch (error) {
       res.status(400).json({ error, success: false });
     }

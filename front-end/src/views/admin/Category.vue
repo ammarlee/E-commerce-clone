@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <v-dialog v-model="dialog" persistent max-width="400px">
+          <v-dialog v-model="dialog" persistent max-width="600px">
             <template v-slot:activator> </template>
             <v-card>
               <v-card-title>
@@ -11,27 +11,55 @@
               </v-card-title>
               <v-card-text>
                 <v-container>
-                  <v-row dense>
-                    <v-col cols="12" sm="6" md="10" class="d-block">
-                      <v-text-field
-                        dense
-                        outlined
-                        hide-details
-                        type="text"
-                        label="name"
-                        v-model="category.name"
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <!-- <v-col cols="12" sm="6" md="6">
-                      <input
-                        type="file"
-                        label="image"
-                        @change="uploadFile"
-                        multiple
-                      />
-                    </v-col> -->
-                  </v-row>
+                  <v-form v-model="valid">
+                    <v-row v-if="mode == 1">
+                      <v-col cols="12" sm="6" md="10" class="d-block">
+                        <v-text-field
+                          dense
+                          outlined
+                          hide-details
+                          :rules="[allRules.required, allRules.minNameLen(4)]"
+                          type="text"
+                          label="name"
+                          v-model="category.name"
+                        >
+                        </v-text-field>
+                      </v-col>
+
+                      <v-col cols="12">
+                        <input
+                          type="file"
+                          :rules="[allRules.required]"
+                          @change="uploadFile"
+                          single
+                        />
+                      </v-col>
+                      <v-col cols="12" sm="6" md="10" class="d-block">
+                        <v-textarea
+                          dense
+                          outlined
+                          hide-details
+                          :rules="[allRules.required, allRules.minNameLen(4)]"
+                          label="description"
+                          v-model="category.description"
+                        >
+                        </v-textarea>
+                      </v-col>
+                    </v-row>
+                    <v-row v-else>
+                      <v-col cols="12" sm="6">
+                        <v-autocomplete
+                          v-model="child"
+                          :items="entities"
+                          item-text="name"
+                          item-value="_id"
+                        ></v-autocomplete>
+                      </v-col>
+                      <v-col cols="12" sm="6">
+                        
+                      </v-col>
+                    </v-row>
+                  </v-form>
                 </v-container>
               </v-card-text>
               <v-card-actions>
@@ -43,6 +71,7 @@
                   v-if="!editmode"
                   color="green darken-1"
                   text
+                  :disabled="!valid"
                   type="sumbit"
                   @click="addCategory"
                 >
@@ -63,7 +92,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="my-0  text-center" dense>
+      <v-row class="my-0 text-center" dense>
         <v-col cols="12" class="d-flex justify-center">
           <v-card>
             <v-card-title>
@@ -90,8 +119,12 @@
                   <v-toolbar-title> category list</v-toolbar-title>
                   <v-divider class="mx-4" inset vertical></v-divider>
                   <v-spacer></v-spacer>
-                  <v-btn color="success" @click="add"
+                  <v-btn color="success mr-1" small @click="add"
                     >add category
+                    <i class="fa fa-plus mr-2"></i>
+                  </v-btn>
+                  <v-btn color="info " small @click="add"
+                    >add child
                     <i class="fa fa-plus mr-2"></i>
                   </v-btn>
                 </v-toolbar>
@@ -121,12 +154,16 @@ export default {
   data() {
     return {
       files: [],
+      child: null,
+      mode: 2,
       category: {
         name: null,
       },
+      img: null,
       search: "",
       editmode: false,
       loading: false,
+      valid: false,
       dialog: false,
       entities: [],
       headers: [
@@ -145,9 +182,9 @@ export default {
       ],
     };
   },
-mounted () {
-  this.getDate();
-},
+  mounted() {
+    this.getDate();
+  },
   methods: {
     async getDate() {
       try {
@@ -155,7 +192,6 @@ mounted () {
         const categorioes = await Functions.getCat();
         this.entities = categorioes.data.cat;
         this.loading = false;
-
       } catch (error) {
         this.loading = false;
         this.errors = error;
@@ -163,15 +199,23 @@ mounted () {
     },
     async confirmEdit() {
       try {
-        console.log(this.category);
-        const res = await Functions.editCategory(this.category);
-        var i= this.entities.indexOf(this.entities.filter(e=>e._id==this.category._id)[0]);
-            this.$set(this.entities, i, res.data.category);
-        this.dialog=false
+        const formData = new FormData();
+        formData.append("files", this.img);
+        formData.append("category", JSON.stringify(this.category));
+
+        const res = await Functions.editCategory(formData);
+        var i = this.entities.indexOf(
+          this.entities.filter((e) => e._id == this.category._id)[0]
+        );
+        this.$set(this.entities, i, res.data.category);
+        this.dialog = false;
         this.dialogNotifySuccess(res.data.msg);
       } catch (error) {
         this.dialogNotifyError(error.response.msg);
       }
+    },
+    uploadFile(e) {
+      this.img = e.target.files[0];
     },
 
     add() {
@@ -179,33 +223,36 @@ mounted () {
       this.category = {};
     },
     del(id) {
-      this.$dialog
-        .info({
-          text: "are you sure you want to delete?",
-          title: "  delete category ",
-          persistent: true,
-          actions: {
-            true: {
-              text: "yes",
-              color: "green",
-              handle: () => {
-                Functions.deleteCategory(id)
-                  .then(() => {
-                    this.dialogNotifySuccess("deleted");
-                  })
-                  .catch((error) => {
-                    this.dialogNotifyError(error.response);
-                  });
-              },
-            },
-            false: {
-              text: "cancel",
+      this.$dialog.info({
+        text: "are you sure you want to delete?",
+        title: "  delete category ",
+        persistent: true,
+        actions: {
+          true: {
+            text: "yes",
+            color: "green",
+            handle: () => {
+              Functions.deleteCategory(id)
+                .then(() => {
+                  const index = this.entities.indexOf(
+                    this.entities.filter((e) => e._id == id)[0]
+                  );
+                  if (index > -1) {
+                    this.entities.splice(index, 1);
+                  }
+
+                  this.dialogNotifySuccess("deleted");
+                })
+                .catch((error) => {
+                  this.dialogNotifyError(error.response);
+                });
             },
           },
-        })
-        .then((res) => {
-          console.log("delet res:", res);
-        });
+          false: {
+            text: "cancel",
+          },
+        },
+      });
     },
 
     edit(id) {
@@ -220,24 +267,26 @@ mounted () {
       this.dialog = false;
       this.product = {};
     },
-    uploadFile(e) {
-      const input = e.target.files;
-      var reader = new FileReader();
-      reader.readAsDataURL(input[0]);
-      reader.onload = () => {
-        this.files.push(reader.result);
-      };
-    },
+    // uploadFile(e) {
+    //   const input = e.target.files;
+    //   var reader = new FileReader();
+    //   reader.readAsDataURL(input[0]);
+    //   reader.onload = () => {
+    //     this.files.push(reader.result);
+    //   };
+    // },
     async addCategory() {
       try {
-        const res = await Functions.createCategory({
-          // pic: this.files[0],
-          name: this.category.name,
-        });
+        const formData = new FormData();
+        formData.append("files", this.img);
+        formData.append("category", JSON.stringify(this.category));
+        const res = await Functions.createCategory(formData);
+        this.$set(this.entities, this.entities.length, res.data.category);
+
         this.dialog = true;
         this.dialogNotifySuccess(res.data.msg);
       } catch (error) {
-        this.dialogNotifyError(error.response.msg);
+        this.dialogNotifyError(error.response.data.msg);
         this.errors = error;
       }
     },

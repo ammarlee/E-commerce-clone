@@ -2,6 +2,7 @@
   <div>
     <div>
       <h1 class="headers-title fontName">all Products</h1>
+          
       <v-row>
         <v-col cols="12" sm="3" md="3">
           <h2 class="headers-title fontName">filters</h2>
@@ -10,12 +11,12 @@
             <v-list-group :value="true" prepend-icon="mdi-plus">
               <template v-slot:activator>
                 <v-list-item-title>
-                  <h2 class="fontName text-left">shop by product</h2>
+                  <h4 class="fontName text-left">shop by product</h4>
                 </v-list-item-title>
               </template>
               <v-list-item>
                 <!-- <v-list-item-title v-text="title"></v-list-item-title> -->
-
+  
                 <v-container class="headers-title">
                   <v-checkbox
                     v-for="item in categories"
@@ -146,6 +147,7 @@
 
 <script>
 import Details from "./Details.vue";
+import productsApi from '../../../server/Products-Api'
 
 export default {
  components: {
@@ -154,6 +156,7 @@ export default {
   data() {
     return {
       selected: [],
+      page:1,
       dialog: false,
       products: null,
       productId:null,
@@ -173,6 +176,15 @@ export default {
     },
   },
   methods: {
+   async getProductsByCategory(categories){
+     try {
+       const res = await productsApi.filterProduct({categories,page:this.page})
+       console.log(res.data);
+     } catch (error) {
+       console.log(error);
+       
+     }
+    },
     openDialog(id){
       this.dialog = true
       this.productId = id;
@@ -192,20 +204,25 @@ export default {
     allProducts(newdata) {
       this.setProducts(newdata);
     },
+    page(){
+      this.getProductsByCategory(this.selected)
+
+    },
 
     selected(newValue) {
       if (newValue.length == 0) {
         this.setProducts(this.$store.getters.getProducts);
       } else {
-        let filtered = [];
-        this.$store.getters.getProducts.posts.forEach((i) => {
-          newValue.forEach((category) => {
-            if (i.category == category.toString()) {
-              filtered.push(i);
-            }
-          });
-        });
-        this.products = filtered;
+        this.getProductsByCategory(newValue)
+        // let filtered = [];
+        // this.$store.getters.getProducts.posts.forEach((i) => {
+        //   newValue.forEach((category) => {
+        //     if (i.category == category.toString()) {
+        //       filtered.push(i);
+        //     }
+        //   });
+        // });
+        // this.products = filtered;
       }
     },
   },

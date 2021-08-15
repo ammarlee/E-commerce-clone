@@ -344,7 +344,6 @@ export default {
       }
       formData.append("data", JSON.stringify(this.product));
       formData.append("user", JSON.stringify(this.user));
-      console.log("add new product");
       Functions.addProduct(formData)
         .then((res) => {
           this.entities.push(res.data.products);
