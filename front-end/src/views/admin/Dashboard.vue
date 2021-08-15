@@ -1,18 +1,20 @@
 <template>
   <div>
-    <v-toolbar color="purple" dense>
-        <v-toolbar-items class="d-none d-md-inline">
-        <v-btn text to="/Dashboard" title="category" class=" text-none font-weight-bold">
-          <v-icon x-large color="white">mdi-table</v-icon>
-          </v-btn>
-           <v-btn text to="/products" title="products" class=" text-none font-weight-bold">
-          <v-icon x-large color="white">mdi-shopping-outline</v-icon>
-          </v-btn>
-          <v-btn text to="/coupon" title="coupon" class=" text-none font-weight-bold">
-          <v-icon x-large color="orange">mdi-shopping-outline</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-        <v-spacer></v-spacer>
+    <v-toolbar color="black" dense>
+      <v-toolbar-items class="d-none d-md-inline">
+
+        <v-btn
+        v-for="(item,i) in links" :key="i"
+          text
+          :to="item.link"
+          :title="item.title"
+          active-class="red"
+          class="text-none font-weight-bold"
+        >
+          <v-icon x-large color="white">{{item.icon}}</v-icon>
+        </v-btn>
+      </v-toolbar-items>
+      <v-spacer></v-spacer>
       <v-menu v-if="getUser" bottom min-width="200px" rounded offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon class="d-none d-sm-inline mt-1" v-on="on">
@@ -50,10 +52,8 @@
     </v-toolbar>
     <v-row>
       <v-col class="d-flex justify-center mt-10">
-        <h2 class="text-capitalize ">admin dashboard</h2>
-        <div>
-    
-        </div>
+        <h2 class="text-capitalize">admin dashboard</h2>
+        <div></div>
       </v-col>
     </v-row>
 
@@ -66,8 +66,16 @@
 </template>
 
 <script>
-import Functions from "../../../server/Authantication-Api"
+import Functions from "../../../server/Authantication-Api";
 export default {
+  data() {
+    return {
+      links:[{link:'/Dashboard',title: 'category',icon:'mdi-table'},
+        {link:'/products',title: 'products',icon:'mdi-shopping-outline'},
+        {link:'/coupon',title: 'coupon',icon:'mdi-shopping'},
+        ]
+    }
+  },
   methods: {
     async logout() {
       try {
@@ -81,9 +89,9 @@ export default {
     },
   },
   computed: {
-      getUser() {
-          return this.$store.getters.getUser 
-      }
+    getUser() {
+      return this.$store.getters.getUser;
+    },
   },
 };
 </script>

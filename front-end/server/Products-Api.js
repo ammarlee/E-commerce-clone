@@ -10,6 +10,10 @@ static getAdminProducts(userId) {
     const id = formdata.get("id");
     return axios().post(`file/edit/${id}`, formdata);
   }
+  
+  static filterProduct(data) {
+    return axios().post(`filter-product?page=${data.page}&limit=5`, {categories:data.categories});
+  }
   static addProduct(formdata) {
     return axios().post(`file-upload`, formdata);
   }

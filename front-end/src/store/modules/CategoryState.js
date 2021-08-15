@@ -1,7 +1,7 @@
 
 import categoryFunctions from "../../../server/Category-Api"
 const state = {
-  category:null,
+  category:[],
   
 
 }

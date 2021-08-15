@@ -1,10 +1,12 @@
 import ApiServices from '../../server/Card-Api'
+import FormRules from "./Form-rules"
 import moment from 'moment'
 export  default{
     data() {
       return {
         errors:null,
          overlay:false,
+         allRules:FormRules
       }
     },
     computed:{

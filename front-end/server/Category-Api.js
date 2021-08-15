@@ -4,8 +4,7 @@ class Category {
 
 //   for category 
 static createCategory(data) {
-  console.log(data);
-    return axios().post(`add-category`, { name: data.name, img: data.pic });
+    return axios().post(`add-category`,data);
   }
   static editCategory(data){
     return axios().post(`category-edit`,data);

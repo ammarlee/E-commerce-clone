@@ -35,18 +35,23 @@
                       mode="out-in"
                     >
                       <div
-                        class="overlaydiv divopacity"
+                        class="overlaydiv d-flex justify-center align-center divopacity"
                         min-height="100"
                         min-width="100"
-                      ></div>
+                      >
+                      <v-btn
+                                  class="black white--text text-uppercase"
+                                  @click.stop="openDialog(item._id)">
+                                  quick view
+                              </v-btn ></div>
                     </transition>
                   </div>
                 </v-img>
                 <div class="pt-6 text-center">
                   <h4 class="mb-2 text-truncate detailsFont">
-                        {{ item.name }}
-                      </h4>
-                      <p class="detailsFont">${{item.price}}</p>
+                    {{ item.name }}
+                  </h4>
+                  <p class="detailsFont">${{ item.price }}</p>
                   <div class="d-flex justify-center aligen-center">
                     <v-btn
                       color="black"
@@ -63,6 +68,9 @@
           </v-hover>
         </v-col>
       </v-row>
+      <div class="text-center mt-10">
+        <v-pagination v-model="page" :length="hasNextPage? page+1:page"></v-pagination>
+      </div>
 
       <v-row v-if="products">
         <v-col v-if="products.length == 0">
@@ -71,18 +79,51 @@
           </h1>
         </v-col>
       </v-row>
+
     </v-container>
+    <v-row>
+        <v-col cols="12">
+          <v-dialog v-model="dialog" persistent max-width="1000px">
+            <template v-slot:activator> </template>
+            <v-card>
+               <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red darken-1 font-weight-bold" text @click="closeDialog">
+                  X
+                </v-btn>
+              </v-card-actions>
+              <v-card-text>
+                <app-details :productId="productId" :showReview="showReview" v-on:closeDia="closeDialog" ></app-details>
+                
+              </v-card-text>
+             
+            </v-card>
+          </v-dialog>
+        </v-col>
+      </v-row>
   </div>
 </template>
 
 <script>
-import Functions from "../../../server/Products-Api";
+import productsApi from "../../../server/Products-Api";
+import Details from "./Details.vue";
+
 export default {
+  components: {
+   'app-details':Details,
+ },
   data() {
     return {
       overlay2: true,
       alldata: null,
       products: null,
+      page: 1,
+      hasNextPage:null,
+       dialog : false,
+      productId : null,
+      showReview:false
+
+      
     };
   },
 
@@ -93,54 +134,42 @@ export default {
     user() {
       return this.$store.getters.getUser;
     },
-    // products() {
-    //   return this.$store.getters.getProducts.posts.filter((p) => {
-    //     return p.category == this.param;
-    //   });
-    // },
-    getProducts() {
-      return this.$store.getters.getProducts;
-    },
   },
   mounted() {
-    if (this.getProducts) {
       this.fetchData();
-    }
   },
   watch: {
-    getProducts: {
-      handler: function () {
-        this.fetchData();
-      },
-      deep: true,
+    page() {
+      this.fetchData();
     },
+ 
   },
 
   methods: {
-    fetchData() {
-      if (this.getProducts && this.getProducts.posts) {
-        // debugger;
-
-        this.products = this.getProducts.posts.filter((p) => {
-          return p.category == this.param;
-        });
-      }
+     closeDialog(){
+      this.dialog = false
+      this.productId = null;
     },
-
-    async deleteOne(productId) {
+     openDialog(id){
+      this.dialog = true
+      this.productId = id;
+    },
+    async fetchData() {
       try {
-        this.overlay = true;
-        await Functions.deleteProduct(productId);
-        this.dialogNotifySuccess("deleteed successfully");
-        let test = this.alldata.filter((p) => {
-          return p._id.toString() !== productId.toString();
-        });
-        this.alldata = test;
-        this.overlay = false;
+        this.overlay=true;
+          const res = await productsApi.filterProduct({
+            categories: this.param,
+            page: this.page,
+          });
+          console.log(res.data);
+          this.products = res.data.products;
+          this.hasNextPage = res.data.hasNextPage;
+        this.overlay=false;
+
+        
       } catch (error) {
-        this.dialogNotifyError("something error");
-        this.errors = error.response;
-        this.overlay = false;
+        this.overlay=false;
+        console.log(error);
       }
     },
     details(productId) {

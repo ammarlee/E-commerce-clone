@@ -32,11 +32,11 @@
         <v-divider></v-divider>
 
         <!-- second one  -->
-        <div class="mt-16 pt-4">
+        <!-- <div class="mt-16 pt-4" hidden>
 
-        <app-products></app-products>
+        <app-products ></app-products>
         </div>
-        
+         -->
       </div>
     </div>
     
@@ -45,14 +45,14 @@
 <script>
 import productFunctions from "../../server/Products-Api";
 import Carsoul from "./shared/Carsoul";
-import allProducts from "./product/AllProducts"
+// import allProducts from "./product/AllProducts"
 import Categories from "./Category/Categories"
 
 export default {
   name: "Home",
   components: {
     "app-carsoul": Carsoul,
-    "app-products": allProducts,
+    // "app-products": allProducts,
     "app-categories":Categories,
   },
   data() {

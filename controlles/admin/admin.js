@@ -8,7 +8,7 @@ exports.CreateProduct = async (req, res, next) => {
   let data = JSON.parse(req.body.data);
   let user = JSON.parse(req.body.user);
   let { name, price, quantity, category, description } = data;
-  let product
+  let product 
   try {
   if(files && files.length > 0) {
 

@@ -42,14 +42,15 @@ new Vue({
   vuetify,
   render: h => h(App),
 async  mounted() {
-  // let currentUrl = 'http://localhost:3000/'
-  let currentUrl = 'https://ammarshop.herokuapp.com/'
+  let currentUrl = 'http://localhost:3000/'
+  // let currentUrl = 'https://ammarshop.herokuapp.com/'
   
   try{
     this.$store.commit('resetcartCount',0)
-    await this.$store.dispatch('getProducts')
+    // await this.$store.dispatch('getProducts')
     const socket = socktConnect(currentUrl)
     socket.on('category',data=>{
+      console.log('category',data);
       if(data.action == 'create'){
         this.$store.dispatch('pushCategory',data.category)
       }
