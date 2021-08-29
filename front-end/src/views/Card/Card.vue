@@ -23,11 +23,9 @@
             page-title
             black
             text-center text-capitalize
-            pt-3
-            pr-6
-            pl-6
             white--text
-            pb-3
+            py-3
+            px-6
           "
         >
           <h1 class="fontName">your card</h1>
@@ -54,7 +52,6 @@
             <template v-slot:default>
               <thead>
                 <tr class="edit-header">
-                  <!-- <th class="text-center detailsFont">image</th> -->
                   <th class="text-center detailsFont">item</th>
                   <th class="text-center detailsFont">price</th>
                   <th class="text-center detailsFont">Quantity</th>
@@ -64,18 +61,6 @@
               </thead>
               <tbody class="table-body">
                 <tr v-for="item in cart.products" :key="item.id">
-                  <!-- <td>  -->
-                  <!-- <v-row @click="details(item._id)" style="cursor: pointer">
-                    <v-col cols="12" sm="3" md="3" class="d-flex justify-center">
-                      <img
-                        :src="item.img"
-                        :alt="item.name"
-                        style="width: 100%; height: 100%"
-                      />
-                    </v-col>
-                   </v-row> -->
-
-                  <!-- </td> -->
                   <td>
                     <v-row @click="details(item._id)" style="cursor: pointer">
                       <v-col cols="12" sm="3">
@@ -346,7 +331,7 @@
         <div style="height: 400px; margin: 10px auto; width: 600px">
           <v-img
             id="mainImg"
-            src="./cart.png"
+            src="@/assets/cart.png"
             style="width: 100%; height: 100%"
             alt="name"
           ></v-img>
@@ -360,29 +345,7 @@
           <app-categories></app-categories>
         </div>
       </div>
-      <!-- overlay -->
-      <v-overlay :value="overlay">
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
-      </v-overlay>
-
-      <!-- <span v-if="cart.products">
-
-              <hr  v-if="cart.products.length >2" class="mt-3 mb-1">
-              <v-btn class=" clearall pink white--text d-none  d-sm-inline" v-if="cart.products.length >2" @click="clearCart(cart)" >
-            Delete all
-          </v-btn>
-              </span> -->
-      <!-- start dialog  -->
-      <div v-if="showtheMap">
-        <v-col cols="12" sm="6" md="6" class="text-body-2" dense
-                    >location
-                  </v-col>
-                  <v-col  >
-                    <app-map @location="userLocation($event)"></app-map>
-                  </v-col>
-      </div>
      
-      <div></div>
     </v-container>
   </div>
 </template>
@@ -391,16 +354,13 @@ import CardFunctions from "../../../server/Card-Api";
 import CouponFunctions from "../../../server/Coupon-Api";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "../../../server/MainApi";
-import map from "../Map.vue";
 import Categories from "../Category/Categories";
 export default {
   components: {
-    "app-map": map,
     "app-categories": Categories,
   },
   data() {
     return {
-      showtheMap:false,
       location: [
         {
           name: "Home",
@@ -423,14 +383,9 @@ export default {
       isValid: false,
       dialog: false,
       errors: null,
-      overlay: false,
-      orderlocation: null,
     };
   },
   computed: {
-    userCart() {
-      return this.$store.getters.getCart;
-    },
     cart() {
       return this.$store.getters.getCart;
     },
@@ -441,10 +396,7 @@ export default {
       return this.$store.getters.getCartCount;
     },
   },
-  mounted() {
-    this.overlay = true;
-    this.overlay = false;
-  },
+  
   methods: {
     countPercentage(total, percentX) {
       return ((percentX / 100) * total).toFixed(2);
@@ -480,6 +432,7 @@ export default {
         return;
       } else {
         try {
+          this.overlay = true
           let userId = this.currentUser._id;
           await CardFunctions.setQuantity({
             ...product,
@@ -487,45 +440,52 @@ export default {
           });
           this.$store.commit("cartCount");
           this.$store.dispatch("findCart", userId);
+          this.overlay = false
         } catch (error) {
+          this.overlay = false
+
           console.log(error);
         }
       }
     },
     async increaseQuantity(product) {
       try {
+        this.overlay =true
         let userId = this.currentUser._id;
-        const { data } = await CardFunctions.increaseQuantity({
+         await CardFunctions.increaseQuantity({
           ...product,
           userId,
         });
-        console.log(data);
+        this.overlay =false
         this.$store.commit("cartCount");
-        // this.rightDrawer =!this.rightDrawer
         this.$store.dispatch("findCart", userId);
       } catch (error) {
+        this.overlay =false
         console.log(error);
       }
     },
     async decreaseQuantity(product) {
       try {
         let userId = this.currentUser._id;
+        this.overlay =true
+
         if (product.quantity == 1) {
           this.deleteItemfromCart({
             cart: this.cart._id,
             productId: product.productId,
           });
         } else {
-          const { data } = await CardFunctions.decreaseQuantity({
+       await CardFunctions.decreaseQuantity({
             ...product,
             userId,
           });
-          console.log(data);
           this.$store.commit("cartCount");
-          // this.rightDrawer =!this.rightDrawer
           this.$store.dispatch("findCart", userId);
+        this.overlay =false
+
         }
       } catch (error) {
+        this.overlay =false
         console.log(error);
       }
     },
@@ -535,15 +495,6 @@ export default {
       this.order.count = this.sum;
       this.order.total = this.total;
     },
-    userLocation(e) {
-      let location = {
-        location: e,
-        address: this.order.address,
-      };
-      localStorage.setItem("orderLocation", JSON.stringify(location));
-      this.orderlocation = e;
-    },
-
     async handlePayment() {
       this.overlay = true;
       try {
@@ -561,7 +512,9 @@ export default {
         await stripe.redirectToCheckout({
           sessionId: session.data.id,
         });
+        this.overlay =false
       } catch (error) {
+        this.overlay =false
         this.errors = error;
       }
     },
@@ -577,20 +530,16 @@ export default {
             color: "green",
             handle: async () => {
               try {
-                this.overlay = true;
                 const res = await CardFunctions.removeFromCard(productId);
-                console.log(res.data);
                 this.dialogNotifySuccess("deleted");
                 if (res.data.data.products.length == 0) {
-                  console.log("itts empty !");
                   this.overlay = false;
                   this.errors = true;
-                  this.cart = null;
+                  // this.cart = null;
                   this.$store.dispatch("setCart", null);
                   this.$store.commit("resetcartCount", 0);
                 } else {
                   let productsList = res.data.data.products;
-
                   const totalcart = productsList.reduce(
                     (accumulator, currentValue) => {
                       return (
@@ -606,10 +555,6 @@ export default {
                     },
                     0
                   );
-                  this.overlay = false;
-                  // if (condition) {
-
-                  // }
                   this.updateCardInfo(res.data.data, totalcart, sumItem);
                 }
               } catch (error) {
@@ -633,23 +578,7 @@ export default {
       this.$store.commit("setTotalPrice", b);
       this.$store.commit("resetcartCount", c);
     },
-    //  CLEAR ALL PRODUCTS IN THE CART
-    async clearCart(cart) {
-      try {
-        this.overlay = true;
-        await CardFunctions.clearTheCart(cart);
-        this.dialogNotifySuccess("cleared card");
-
-        this.overlay = false;
-        this.errors = true;
-        this.cart = null;
-        this.total = null;
-        this.updateCardInfo(null, null, 0);
-      } catch (error) {
-        this.errors = error.response.data;
-        this.overlay = false;
-      }
-    },
+ 
   },
 };
 </script>
@@ -730,13 +659,7 @@ title {
   color: white;
 }
 @media (max-width: 352px) {
-  // .payment{
-  //   position: fixed;
-  //   left: 0;
-  //   bottom: 0;
-  //   width: 80%;
-  //   height: 113px;
-  //   font-size: 18px;
+  
   .erro {
     #mainImg {
       width: 40% !important;
@@ -754,20 +677,11 @@ title {
   #data {
     font-size: 6px !important;
   }
-  #deletebtn {
-  }
+
 }
 // media query
 @media (min-width: 352px) and (max-width: 600px) {
-  // .payment{
-  //   position: fixed;
-  //   left: 0;
-  //   bottom: 0;
-  //   width: 80%;
-  //   height: 113px;
-  //   font-size: 18px;
-
-  // }
+ 
   #name {
     font-size: 15px !important;
   }

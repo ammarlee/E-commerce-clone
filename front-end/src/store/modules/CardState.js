@@ -75,7 +75,6 @@ const actions = {
 
     } catch (error) {
       console.log(error);
-      this.errors = 'you have to login to be able to show your cart'
     }
     },
   setCart({commit},payload){
@@ -86,7 +85,7 @@ const actions = {
     commit('resetcartCount',payload)
 
   },
-  async addToCart({commit},payload){
+   addToCart({commit},payload){
     commit('addToCart',payload)
   },
   

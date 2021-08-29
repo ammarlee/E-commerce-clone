@@ -1,5 +1,6 @@
 let io;
 const currentUrl = "http://localhost:8080"
+// const currentUrl = "http://localhost:3000"
 // const currentUrl = "https://ammarshop.herokuapp.com/"
 module.exports = {
   init: httpServer => {

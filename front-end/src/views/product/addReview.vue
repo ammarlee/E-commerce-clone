@@ -1,8 +1,6 @@
 <template>
   <div>
-    <v-overlay :value="overlay">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    
     <v-container class="text-capitalize ">
       <h1 class="font-weight-bold text-center mb-3 mt-5 ">create review</h1>
         <v-divider></v-divider>
@@ -106,7 +104,7 @@ export default {
         last: null,
       },
       user: null,
-      overlay: false,
+    
     };
   },
 

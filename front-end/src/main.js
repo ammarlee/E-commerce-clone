@@ -11,6 +11,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import './assets/global.css';
 import Mixins from './plugins/mixins';
 import VueImg from 'v-img';
+import Overlay from './views/shared/OverLay.vue'
 Vue.use(VueImg);
 import VuetifyDialog from 'vuetify-dialog'
 import 'vuetify-dialog/dist/vuetify-dialog.css'
@@ -25,6 +26,7 @@ const vueImgConfig = {
 }
 import moment from 'moment'
 
+Vue.component('app-overlay',Overlay)
 Vue.use(VueImg, vueImgConfig);
 Vue.mixin(Mixins);
 Vue.filter('formateDate', function (value) {
@@ -47,17 +49,15 @@ async  mounted() {
   
   try{
     this.$store.commit('resetcartCount',0)
-    // await this.$store.dispatch('getProducts')
     const socket = socktConnect(currentUrl)
     socket.on('category',data=>{
-      console.log('category',data);
       if(data.action == 'create'){
         this.$store.dispatch('pushCategory',data.category)
       }
       else if(data.action == 'deleteCategory'){
         this.$store.dispatch('removeCategory',data.category._id)
       }
-      else if(data.action == 'edit'){
+      else if(data.action == 'editCategory'){
         this.$store.dispatch('editCategory',data.category)
       }
      else if(data.action == 'createProduct'){

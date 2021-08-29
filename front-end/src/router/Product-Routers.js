@@ -23,12 +23,12 @@ export default[
         }
       },
       {
-        path: "/details/:id",
-        name: "details",
+        path: "/Product/:id",
+        name: "Product",
         // query:new Date().getTime(),
         props:true,
         components:{
-          default:()=>{ return import("../views/product/Details.vue")},
+          default:()=>{ return import("../views/product/Product.vue")},
           header,footer
         }
       },

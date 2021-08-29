@@ -44,7 +44,7 @@ app.use((req,res,next)=>{
     next()
 })
 let cors = require('cors')
-// app.use(hamlet())
+app.use(hamlet())
 app.use(morgan('dev'))
 const currentUrl = "http://localhost:8080"
 // const currentUrl = "https://ammarshop.herokuapp.com/"

@@ -1,8 +1,5 @@
 <template>
   <div class="content">
-    <v-overlay :value="overlay">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
     <v-container v-if="!overlay" class="thecontainer">
       <v-row v-if="products && products.length > 0">
         <v-col
@@ -21,7 +18,7 @@
                   contain
                   max-height="360"
                   aspect-ratio="1.4"
-                  @click.prevent="details(item._id)"
+                  @click.prevent="navigateToProduct(item._id)"
                 >
                   <div
                     v-if="hover"
@@ -35,15 +32,23 @@
                       mode="out-in"
                     >
                       <div
-                        class="overlaydiv d-flex justify-center align-center divopacity"
+                        class="
+                          overlaydiv
+                          d-flex
+                          justify-center
+                          align-center
+                          divopacity
+                        "
                         min-height="100"
                         min-width="100"
                       >
-                      <v-btn
-                                  class="black white--text text-uppercase"
-                                  @click.stop="openDialog(item._id)">
-                                  quick view
-                              </v-btn ></div>
+                        <v-btn
+                          class="black white--text text-uppercase"
+                          @click.stop="openDialog(item._id)"
+                        >
+                          quick view
+                        </v-btn>
+                      </div>
                     </transition>
                   </div>
                 </v-img>
@@ -69,7 +74,10 @@
         </v-col>
       </v-row>
       <div class="text-center mt-10">
-        <v-pagination v-model="page" :length="hasNextPage? page+1:page"></v-pagination>
+        <v-pagination
+          v-model="page"
+          :length="hasNextPage ? page + 1 : page"
+        ></v-pagination>
       </div>
 
       <v-row v-if="products">
@@ -79,51 +87,55 @@
           </h1>
         </v-col>
       </v-row>
-
     </v-container>
     <v-row>
-        <v-col cols="12">
-          <v-dialog v-model="dialog" persistent max-width="1000px">
-            <template v-slot:activator> </template>
-            <v-card>
-               <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="red darken-1 font-weight-bold" text @click="closeDialog">
-                  X
-                </v-btn>
-              </v-card-actions>
-              <v-card-text>
-                <app-details :productId="productId" :showReview="showReview" v-on:closeDia="closeDialog" ></app-details>
-                
-              </v-card-text>
-             
-            </v-card>
-          </v-dialog>
-        </v-col>
-      </v-row>
+      <v-col cols="12">
+        <v-dialog v-model="dialog" persistent max-width="1000px">
+          <template v-slot:activator> </template>
+          <v-card>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="red darken-1 font-weight-bold"
+                text
+                @click="closeDialog"
+              >
+                X
+              </v-btn>
+            </v-card-actions>
+            <v-card-text>
+              <app-Product
+                :productId="productId"
+                :showReview="showReview"
+                v-on:closeDia="closeDialog"
+              ></app-Product>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
 import productsApi from "../../../server/Products-Api";
-import Details from "./Details.vue";
+import Product from "./Product.vue";
+import { CardMixins } from "../../plugins/CardMixins";
 
 export default {
   components: {
-   'app-details':Details,
- },
+    "app-Product": Product,
+  },
+  mixins: [CardMixins],
+
   data() {
     return {
-      overlay2: true,
-      alldata: null,
       products: null,
       page: 1,
-      hasNextPage:null,
-       dialog : false,
-      productId : null,
-      showReview:false
-
-      
+      hasNextPage: null,
+      dialog: false,
+      productId: null,
+      showReview: false,
     };
   },
 
@@ -131,49 +143,42 @@ export default {
     param() {
       return this.$route.params.name;
     },
-    user() {
-      return this.$store.getters.getUser;
-    },
   },
   mounted() {
-      this.fetchData();
+    this.fetchData();
   },
   watch: {
     page() {
       this.fetchData();
     },
- 
   },
 
   methods: {
-     closeDialog(){
-      this.dialog = false
+    closeDialog() {
+      this.dialog = false;
       this.productId = null;
     },
-     openDialog(id){
-      this.dialog = true
+    openDialog(id) {
+      this.dialog = true;
       this.productId = id;
     },
     async fetchData() {
       try {
-        this.overlay=true;
-          const res = await productsApi.filterProduct({
-            categories: this.param,
-            page: this.page,
-          });
-          console.log(res.data);
-          this.products = res.data.products;
-          this.hasNextPage = res.data.hasNextPage;
-        this.overlay=false;
-
-        
+        this.overlay = true;
+        const res = await productsApi.filterProduct({
+          categories: this.param,
+          page: this.page,
+        });
+        this.products = res.data.products;
+        this.hasNextPage = res.data.hasNextPage;
+        this.overlay = false;
       } catch (error) {
-        this.overlay=false;
+        this.overlay = false;
         console.log(error);
       }
     },
-    details(productId) {
-      this.$router.push("/details/" + productId);
+    navigateToProduct(productId) {
+      this.$router.push("/Product/" + productId);
     },
   },
 };

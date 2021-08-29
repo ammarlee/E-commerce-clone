@@ -14,7 +14,7 @@ static createCategory(data) {
     return axios().post(`delete-category/${id}`);
   }
   
-   static getCat() {
+   static getCategories() {
      return axios().get(`get-category`);
    }
   

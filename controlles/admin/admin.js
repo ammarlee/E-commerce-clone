@@ -57,10 +57,8 @@ exports.CreateProduct = async (req, res, next) => {
 // EDIT PRODUCT
 exports.editProduct = async (req, res, next) => {
   let product = JSON.parse(req.body.product);
-  let user = JSON.parse(req.body.user);
   let { name, price, quantity, category, description } = product;
   let edited
-  
   try {
     const files = req.files;
     if(files && files.length > 0) {
@@ -96,7 +94,6 @@ exports.editProduct = async (req, res, next) => {
       msg: "you have edited product",
     });
   } catch (error) {
-    console.log(error);
     res.status(401).json({
       success: false,
       msg: "you coludnt  have edit the product",
@@ -121,6 +118,6 @@ exports.deleteProduct = (req, res, next) => {
         msg: "you coludnt  have deleted the product",
       });
     });
-  git };
+   };
 
 

@@ -19,17 +19,16 @@ const transporter = nodeMailer.createTransport(nodegride({
   //  product details
   exports.getProductDetails=(req,res,next)=>{
       const  productId = req.params.id
-     return Product.findOne({_id:productId}).then((product)=>{
+     return Product.findOne({_id:productId}).lean().then((product)=>{
          res.status(200).json({product ,success:true});
       }).catch(err=>{
         res.status(400).json(err)
       })
-      // res.send('DELTE SINGLE PRODUCT WITH THAT ID ',productId)
   }
   
   exports.filterProduct=async(req,res,next)=>{
     let page=req.query.page *1 ||1;
-    let limit=req.query.limit *1 ||5;
+    let limit=req.query.limit *1 ||6;
     let skip = (page-1) *limit;
     let categories = req.body.categories
     let query = { category: { $in: categories} }
@@ -53,29 +52,9 @@ const transporter = nodeMailer.createTransport(nodegride({
       })
     }
 
-    // Product.find(query).count().then(count=>{
-    //   Product.find({ category: { $in: categories} }).skip(skip).limit(limit).then((products)=>{
-    //     res.status(200).json({
-    //       success:true,
-    //       products,
-    //       hasNextPage =limit * page < count,
-    //       hasPerviousPage =page >1,
-    //       count,
-    //       lastPage = Math.ceil(count / limit)
-          
-    //     })
-        
-    // })
-    // .catch(err=>{
-     
-      
-    // })
-    // })
-   
-
   }
   exports.homePage=(req,res,next)=>{
-    Product.find({}).then((posts)=>{
+    Product.find({}).lean().then((posts)=>{
           res.status(200).json({
             success:true,
             posts
@@ -125,7 +104,7 @@ const transporter = nodeMailer.createTransport(nodegride({
   exports.fetchReviews=(req,res,next)=>{
     const productId = req.params.productId
     Review.find({productId}).populate('creatorId').exec().then((review)=>{
-      res.status(000).json({
+      res.status(200).json({
         review,
         success:true
        })

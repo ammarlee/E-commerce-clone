@@ -12,6 +12,7 @@ export default new Vuex.Store({
   state: {
     notifications:[],
     errors:null,
+    overlay:false,
     loading:false,
     play:null,
     searching:null,
@@ -22,12 +23,18 @@ export default new Vuex.Store({
     notifications(state) {
       return state.notifications;
     },
+    overlay(state) {
+      return state.overlay;
+    },
    
     getSearching(state){
       return state.searching
     }
   },
   mutations: {
+    setOverLay(state, value){
+      state.overlay=value
+    },
     
     notifications(state, value) {
       state.notifications.push(value) ;

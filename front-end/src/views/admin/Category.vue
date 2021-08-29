@@ -189,7 +189,7 @@ export default {
     async getDate() {
       try {
         this.loading = true;
-        const categorioes = await Functions.getCat();
+        const categorioes = await Functions.getCategories();
         this.entities = categorioes.data.cat;
         this.loading = false;
       } catch (error) {

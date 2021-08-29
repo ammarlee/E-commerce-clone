@@ -12,7 +12,7 @@
       class="black--text text-capitalize"
         v-for="item in category" :key="item._id"
         :href="'#tab-' + item.name"
-        @click="navegat(item)"
+        @click="navegatToCategory(item)"
       >
          {{ item.name }}
       </v-tab>
@@ -28,7 +28,7 @@
 
     },
     methods: {
-      navegat(item){
+      navegatToCategory(item){
         if (this.$route.name ==='cat') {
           this.$router.push('/').then(()=>{
           this.$router.push(`/cat/${item.name}`)

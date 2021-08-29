@@ -67,13 +67,16 @@
                     </v-col>
                     <v-col v-if="editmode" cols="12">
                       <div class="d-flex justify-space-around flex-wrap">
-                      <div  v-for="(img,i) in product.img" :key="i">
-                        <v-img :src="img" alt="post"  
-                         max-height="170" max-width="150">
-                         </v-img>
+                        <div v-for="(img, i) in product.img" :key="i">
+                          <v-img
+                            :src="img"
+                            alt="post"
+                            max-height="170"
+                            max-width="150"
+                          >
+                          </v-img>
+                        </div>
                       </div>
-                      </div>
-
                     </v-col>
                     <v-col cols="12">
                       <vue-editor v-model="product.description"></vue-editor>
@@ -110,7 +113,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="my-0  text-center" dense>
+      <v-row class="my-0 text-center" dense>
         <v-col cols="12" class="d-flex justify-center">
           <v-card>
             <v-card-title>
@@ -145,11 +148,10 @@
               </template>
 
               <template v-slot:[`item.name`]="{ item }">
-                <p style="cursor:pointer" @click="details(item._id)">{{item.name}}</p>
-                
+                <p style="cursor: pointer" @click="details(item._id)">
+                  {{ item.name }}
+                </p>
               </template>
-
-              
 
               <template v-slot:[`item.actions`]="{ item }">
                 <v-btn icon @click="del(item._id)"
@@ -246,14 +248,7 @@ export default {
     details(productId) {
       this.$router.push("/details/" + productId);
     },
-    onchangePhoto(e) {
-      const input = e.target.files;
-      var reader = new FileReader();
-      reader.readAsDataURL(input[0]);
-      reader.onload = () => {
-        this.testing.push(reader.result);
-      };
-    },
+
     uploadFile(e) {
       this.images = e.target.files;
     },
@@ -264,14 +259,13 @@ export default {
     },
     add() {
       this.product = {};
-      this.images = []
+      this.images = [];
       this.dialog = true;
     },
     edit(id) {
       this.editmode = true;
       this.id = id;
       this.product = { ...this.entities.filter((e) => e._id == id)[0] };
-      console.log(this.product);
       this.dialog = true;
     },
     confirmEdit() {
@@ -287,16 +281,14 @@ export default {
       }
       formData.append("product", JSON.stringify(this.product));
       formData.append("id", JSON.stringify(this.id));
-      formData.append("user", JSON.stringify(this.user));
+      formData.append("user", JSON.stringify(this.currentUser));
       Functions.editProduct(formData)
         .then((res) => {
-          console.log(res.data);
           this.dialogNotifySuccess("edited successfully");
-         
-           var i= this.entities.indexOf(this.entities.filter(e=>e._id==res.data.post._id )[0]);
-       
-      this.$set(this.entities, i, res.data.post);
-
+          var i = this.entities.indexOf(
+            this.entities.filter((e) => e._id == res.data.post._id)[0]
+          );
+          this.$set(this.entities, i, res.data.post);
           this.dialog = false;
           this.editmode = false;
         })
@@ -333,9 +325,7 @@ export default {
             },
           },
         })
-        .then((res) => {
-          console.log("delet res:", res);
-        });
+      
     },
     handleSubmit() {
       const formData = new FormData();
@@ -343,13 +333,13 @@ export default {
         formData.append("files", this.images[i]);
       }
       formData.append("data", JSON.stringify(this.product));
-      formData.append("user", JSON.stringify(this.user));
+      formData.append("user", JSON.stringify(this.currentUser));
       Functions.addProduct(formData)
         .then((res) => {
           this.entities.push(res.data.products);
           this.dialog = false;
-          this.product = {}
-          this.images = []
+          this.product = {};
+          this.images = [];
           this.dialogNotifySuccess("added new product");
         })
         .catch((err) => {
@@ -358,11 +348,7 @@ export default {
         });
     },
   },
-  computed: {
-    user() {
-      return this.$store.getters.getUser;
-    },
-  },
+
 };
 </script>
 

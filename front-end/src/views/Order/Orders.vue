@@ -14,22 +14,22 @@
             <template v-slot:default>
               <thead>
                 <tr>
-                  <th class="text-left text-h6 text-capitalize">
+                  <th class="text-center text-h6 text-capitalize">
                     count
                   </th>
-                  <th class="text-left text-h6 text-capitalize">
+                  <th class="text-center text-h6 text-capitalize">
                     price
                   </th>
-                   <th class="text-left text-h6 text-capitalize">
+                   <th class="text-center text-h6 text-capitalize">
                     date
                   </th>
-                  <th class="text-left text-h6 text-capitalize">
-                    details
+                  <th class="text-center text-h6 text-capitalize">
+                    view
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in orders" :key="item._id">
+                <tr v-for="item in orders" :key="item._id" class="text-center">
                   <td>{{ item.items.products.length }}</td>
                   <td>{{ item.items.total }}</td>
                   <td>{{  item.items.date |formateDate}}</td>
@@ -39,9 +39,10 @@
                       class=" ma-2"
                       :loading="loading"
                       :disabled="loading"
+                      title="view order"
                       icon
                       text
-                      @click="download(item)"
+                      @click="viewOrder(item)"
                     >
                       <v-icon color="orange">mdi-eye</v-icon>
                       </v-btn
@@ -53,6 +54,7 @@
           </v-simple-table>
         </v-col>
       </v-row>
+      
     </v-container>
   </div>
 </template>
@@ -62,16 +64,13 @@ import Functions from "../../../server/Order_Api";
 export default {
   data() {
     return {
-      desserts: [],
-      loader: null,
       loading: false,
       errors: null,
       orders: null,
-      done: null,
     };
   },
   methods: {
-    async download(item) {
+    async viewOrder(item) {
      this.orders.find((i) => {
         return i._id.toString() == item._id.toString();
       });
@@ -83,9 +82,12 @@ export default {
   },
   async mounted() {
     try {
+      this.overlay = true
       const res = await Functions.getOrders(this.$store.getters.getUser._id);
       this.orders = res.data.orders;
+      this.overlay = false;
     } catch (error) {
+      this.overlay = false;
       this.errors = error.response.err.msg;
     }
   },

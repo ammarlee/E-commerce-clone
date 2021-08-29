@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="cart && cart.products">
     <v-container>
       <v-row>
         <v-col>
@@ -149,25 +149,6 @@
               </v-btn>
             </v-stepper-content>
 
-            <!-- <v-stepper-step
-              :complete="e6 > 3"
-              class="stepper-head"
-              step="3"
-              editable
-            >
-              payment
-            </v-stepper-step>
-
-            <v-stepper-content step="3">
-              <v-card
-                color="grey lighten-1"
-                class="mb-12"
-                height="200px"
-              ></v-card>
-              <v-btn color="black white--text" @click="handlePayment">
-                <v-icon>mdi-cash</v-icon>checkout
-              </v-btn>
-            </v-stepper-content> -->
           </v-stepper>
         </v-col>
         <v-col cols="12" sm="4" md="4">
@@ -245,6 +226,15 @@
       </v-row>
     </v-container>
   </div>
+  <div v-else>
+     <v-container>
+      <v-row>
+        <v-col>
+          <h3 class="stepper-head text-center my-6 header">your cart is empty</h3>
+        </v-col>
+      </v-row>
+     </v-container>
+  </div>
 </template>
 
 <script>
@@ -262,9 +252,7 @@ export default {
     };
   },
   computed: {
-    userCart() {
-      return this.$store.getters.getCart;
-    },
+   
     cart() {
       return this.$store.getters.getCart;
     },

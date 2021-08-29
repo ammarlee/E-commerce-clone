@@ -13,7 +13,7 @@ exports.editCategory = async(req,res,next)=>{
     try {
       if (files.length < 0) {
         const category = await Category.findOneAndUpdate({_id},{name,description},{new:true})
-        Socket.getIO().emit("category", { action: "edit", category: category });
+        Socket.getIO().emit("category", { action: "editCategory", category: category });
         res.status(200).json({category,success: true,msg:'you have updated'})
         
       }else {
@@ -29,13 +29,10 @@ exports.editCategory = async(req,res,next)=>{
         });
 
         const category = await Category.findOneAndUpdate({_id},{name,description,img:imgUrl[0]},{new:true})
-        Socket.getIO().emit("category", { action: "edit", category: category });
+        Socket.getIO().emit("category", { action: "editCategory", category: category });
         res.status(200).json({category,success: true,msg:'you have updated'})
       }
-
-    
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error, success: false });
     
   }
@@ -72,7 +69,7 @@ exports.createCategory = async(req, res, next) => {
   };
   
   exports.getCategory = (req, res, next) => {
-    Category.find({})
+    Category.find({}).lean()
       .then((cat) => {
         res.status(200).json({ cat, success: true });
       })

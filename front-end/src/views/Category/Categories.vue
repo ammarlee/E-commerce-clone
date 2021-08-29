@@ -8,7 +8,7 @@
         md="6"
         v-for="item in categoryList"
         :key="item._id"
-        @click="navegat(item)"
+        @click="navegatToCategory(item)"
       >
         <v-hover v-slot="{ hover }">
           <div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import categoryFunctions from "../../../server//Category-Api";
+import categoryFunctions from "../../../server/Category-Api";
 
 export default {
   data() {
@@ -59,14 +59,14 @@ export default {
     };
   },
   methods: {
-        navegat(item){
+        navegatToCategory(item){
           this.$router.push(`/cat/${item.name}`)
         },
   },
   async mounted() {
     try {
       this.overlay = true;
-      const categories = await categoryFunctions.getCat();
+      const categories = await categoryFunctions.getCategories();
       this.categoryList = categories.data.cat;
       this.overlay = false;
     } catch (error) {

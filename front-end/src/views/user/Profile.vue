@@ -31,15 +31,6 @@
                    </v-col>
                 
                </v-row>
-
-              
-
-                
-
-               
-
-           
-            
           </div>
           
                <v-divider class="mb-10"></v-divider>
@@ -150,8 +141,6 @@
 <script>
 import Functions from '../../../server/api'
 import authanticationFunctions from '../../../server/Authantication-Api'
-
-
   export default {
    data(){
      return{

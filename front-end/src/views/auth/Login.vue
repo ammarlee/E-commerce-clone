@@ -1,13 +1,19 @@
 <template>
-  <div class=" text-center pt-15 pb-15 ">
+  <div class="text-center pt-15 pb-15">
     <template>
       <div>
-        <v-card class="mx-auto" style="max-width: 500px;">
+        
+        <v-card class="mx-auto" style="max-width: 500px">
           <v-toolbar class="teal lighten-1 the-toolbar" cards dark flat>
             <v-card-title
-              class="title  text-h4  text-capitalize white--text font-weight-regular"
+              class="
+                title
+                text-h4 text-capitalize
+                white--text
+                font-weight-regular
+              "
             >
-              <router-link to="/" tag="span" class="d-block ">
+              <router-link to="/" tag="span" class="d-block">
                 <v-icon class="the-icon" style="cursor: pointer" x-large
                   >mdi-amazon</v-icon
                 >
@@ -27,7 +33,7 @@
               outlined
               type="error"
               class="text-capitalize mx-auto"
-              style="max-width: 500px;"
+              style="max-width: 500px"
             >
               {{ errors }}
             </v-alert>
@@ -84,6 +90,7 @@
 </template>
 <script>
 import Functions from "../../../server/Authantication-Api";
+import FormRules from "../../plugins/Form-rules"
 export default {
   name: "login",
   data() {
@@ -96,23 +103,13 @@ export default {
       form: false,
       loading: false,
       loader: null,
-      rules: {
-        email: (v) => !!(v || "").match(/@/) || "Please enter a valid email",
-        length: (len) => (v) =>
-          (v || "").length >= len ||
-          `Invalid character length, required ${len}`,
-        password: (v) =>
-          !!(v || "").match(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/
-          ) ||
-          "Password must contain an upper case letter, a numeric character, and a special character",
-        required: (v) => !!v || "This field is required",
-      },
+      rules:FormRules
     };
   },
 
   methods: {
     async login() {
+       
       try {
         this.loading = true;
         const res = await Functions.login(this.user);
@@ -130,8 +127,8 @@ export default {
         this.alertError(er);
         this.loading = false;
       }
-    },
   },
+  }
 };
 </script>
 

@@ -28,25 +28,23 @@ const mutations = {
       isAuthanticated(state,payload){
         state.isAuthanticated = payload
       },
-      logoutUser(state){
-        state.isAuthanticated = false
+      logoutUser(){
         localStorage.setItem("user",JSON.stringify(null));
-      localStorage.setItem("userToken", JSON.stringify(null));
+        localStorage.setItem("userToken", JSON.stringify(null));
       },
 
 }
 const actions = {
     logoutUser({dispatch,commit}){
-        dispatch('setUser',null)
-        commit('logoutUser')
-        dispatch('setAuth',false)
-        dispatch('resetcartCount',0)
-        dispatch('setCart',null)
+      commit('logoutUser')
+      dispatch('setAuth',false)
+      dispatch('resetcartCount',0)
+      dispatch('setCart',null)
+      dispatch('setUser',null)
   
       },
       autoSigningUser({ dispatch }, currentUser){
         if(currentUser){
-
         dispatch('setUser',currentUser)
         dispatch('setAuth',true)
         dispatch('setToken',currentUser.token)

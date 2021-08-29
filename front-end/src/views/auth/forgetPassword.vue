@@ -50,6 +50,8 @@
 </template>
 <script>
 import Functions from "../../../server/Authantication-Api";
+import FormRules from "../../plugins/Form-rules"
+
 export default {
   data() {
     return {
@@ -58,9 +60,7 @@ export default {
       form: false,
       loading: false,
       loader: null,
-      rules: {
-        email: (v) => !!(v || "").match(/@/) || "Please enter a valid email",
-      },
+      rules: FormRules
     };
   },
   methods: {
