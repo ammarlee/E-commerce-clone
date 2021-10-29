@@ -15,7 +15,7 @@ exports.makeOrder=async (req,res,next)=>{
         userId,
         items:{products:cart.products,total:total,date},
         orderLocation:location,
-        shipping
+        shipping:0
       })
       const  newOne = await newOrder.save()
      return res.status(200).json({
@@ -59,8 +59,15 @@ exports.makeOrder=async (req,res,next)=>{
   
   exports.getUserOrders=async (req,res,next)=>{
       const userId= req.params.id
+      let user 
+      console.log({userId});
+      userId=='null' ? user ={}:user ={userId}
       try {
-    let orders = await Order.find({userId}).sort({"items.date": -1})
+    let orders = await Order.find(user).sort({"items.date": -1}).populate({
+      path: 'userId',
+      select: 'name _id'
+    }).
+    exec()
     if(!orders){
       res.status(500).json({
         msg:'you have not`t any orders yet'

@@ -3,7 +3,7 @@
 
   <v-carousel cycle  hide-delimiter-background  :show-arrows="false">
     <v-carousel-item v-for="(slide, i) in imgs" :key="i">
-      <v-sheet height="100%">
+      <v-sheet style="height:900px">
         <v-row class="fill-height fill-width" align="center" justify="center">
           <v-img :src="slide.link" alt="welcome"></v-img>
           <v-fade-transition>

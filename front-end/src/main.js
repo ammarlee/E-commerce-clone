@@ -9,10 +9,13 @@ import socktConnect from "socket.io-client";
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import './assets/global.css';
+import './plugins/Filters';
+import Orders from './views/shared/Orders.vue'
 import Mixins from './plugins/mixins';
 import VueImg from 'v-img';
 import Overlay from './views/shared/OverLay.vue'
 Vue.use(VueImg);
+Vue.component('app-orders', Orders)
 import VuetifyDialog from 'vuetify-dialog'
 import 'vuetify-dialog/dist/vuetify-dialog.css'
 Vue.use(VuetifyDialog, {

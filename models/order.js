@@ -9,6 +9,6 @@ const OrderSchema = new Schema({
       },
       items: {},
       orderLocation:{},
-      shipping:{}
+      shipping:Number
 })
 module.exports = mongoose.model('Order', OrderSchema);

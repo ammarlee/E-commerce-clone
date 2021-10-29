@@ -1,21 +1,51 @@
 <template>
   <div>
-    <v-toolbar color="black" dense>
-      <v-toolbar-items class="d-none d-md-inline">
-
-        <v-btn
-        v-for="(item,i) in links" :key="i"
-          text
+    <!-- new -->
+        <div>
+      <v-navigation-drawer
+        app
+        disable-resize-watcher
+        style="transition: all 0.5s ease-in-out"
+        touchless
+        dark
+        v-model="adminDrawer"
+      >
+        <div id="overlay"></div>
+        <router-link
+          active-class="activelink"
+          exact
+          v-for="(item,i) in links "
+          :key="i"
           :to="item.link"
-          :title="item.title"
-          active-class="red"
-          class="text-none font-weight-bold"
+          tag="div"
+          style="cursor: pointer"
         >
-          <v-icon x-large color="white">{{item.icon}}</v-icon>
-        </v-btn>
-      </v-toolbar-items>
+          <v-list nav dense  class="text-capitalize rounded-lg font-weight-bold pt-0 pb-0 ">
+            <template>
+              <v-list-item link>
+                <v-list-item-avatar>
+                  <v-icon medium>{{item.icon}}</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="text-body-1"
+                    style="font-family: 'Material Design Icons' !important;"
+                  >{{item.title}}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </router-link>
+       
+      </v-navigation-drawer>
+    </div>
+    <!-- toolbar -->
+    <v-toolbar dark dense flat>
+      <v-btn text @click="adminDrawer=!adminDrawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
       <v-spacer></v-spacer>
-      <v-menu v-if="currentUser" bottom min-width="200px" rounded offset-y>
+          <v-menu v-if="currentUser" bottom min-width="200px" rounded offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon class="d-none d-sm-inline mt-1" v-on="on">
             <v-icon large class="white--text" v-if="!currentUser.img">
@@ -32,7 +62,7 @@
             <div class="mx-auto text-center">
               <router-link to="/profile">
                 <v-avatar color="green">
-                  <v-img v-if="currentUser.img" :src="currentUser.img"></v-img>
+                  <v-img v-if="currentUser.img"  :src="currentUser.img"></v-img>
                   <span v-else class="white--text headline">P</span>
                 </v-avatar>
               </router-link>
@@ -50,12 +80,8 @@
         </v-card>
       </v-menu>
     </v-toolbar>
-    <v-row>
-      <v-col class="d-flex justify-center mt-10">
-        <h2 class="text-capitalize">admin dashboard</h2>
-        <div></div>
-      </v-col>
-    </v-row>
+
+    <!-- new  -->
 
     <v-row>
       <v-col>
@@ -70,8 +96,12 @@ import Functions from "../../../server/Authantication-Api";
 export default {
   data() {
     return {
-      links:[{link:'/Dashboard',title: 'category',icon:'mdi-table'},
+      adminDrawer:false,
+      links:[
+        {link:'/Dashboard',title: 'Dashboard',icon:'mdi-home'},
+        {link:'/category',title: 'category',icon:'mdi-table'},
         {link:'/products',title: 'products',icon:'mdi-shopping-outline'},
+        {link:'/allOrders',title: 'orders',icon:'mdi-shopping-outline'},
         {link:'/coupon',title: 'coupon',icon:'mdi-shopping'},
         ]
     }
@@ -88,10 +118,11 @@ export default {
       }
     },
   },
-  computed: {
-   
-  },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.activelink{
+  background-color: orange;
+}
+</style>

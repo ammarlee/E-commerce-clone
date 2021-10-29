@@ -12,7 +12,7 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="6">
+                    <v-col cols="12" sm="4" md="4">
                       <v-text-field
                         label="name"
                         hide-details
@@ -23,22 +23,87 @@
                         v-model="product.name"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="6">
+                    <v-col cols="12" sm="4" md="4">
                       <!-- category  -->
                       <v-select
                         v-model="product.category"
-                        :items="states"
+                        :items="categorList"
                         item-text="name"
+                        item-value="_id"
                         dense
                         outlined
                         menu-props="auto"
-                        label="Select"
+                        label="Select category"
                         hide-details
-                        prepend-icon="mdi-map"
                         single-line
                       >
                       </v-select>
                     </v-col>
+                     <v-col cols="12" sm="4" md="4">
+                      <!-- category  -->
+                      <v-select
+                        v-model="product.subChildCategory"
+                        :items="subChildCategory"
+                          item-text="name"
+                        item-value="_id"
+                        dense
+                        outlined
+                        menu-props="auto"
+                        label="Select sub child category"
+                        hide-details
+                        single-line
+                      >
+                      </v-select>
+                    </v-col>
+                     <v-col cols="12" sm="4" md="4">
+                      <!-- color  -->
+                      <v-select
+                        v-model="product.color"
+                        :items="Colors"
+                        item-text="text"
+                        dense
+                        outlined
+                        menu-props="auto"
+                        label="Select color"
+                        hide-details
+                        single-line
+                      >
+                      </v-select>
+                    </v-col>
+                       <v-col cols="12" sm="4" md="4">
+                      <!-- gender  -->
+                      <v-select
+                        v-model="product.gender"
+                        :items="Genders"
+                        item-text="text"
+                        dense
+                        outlined
+                        menu-props="auto"
+                        label="Select gender"
+                        hide-details
+                        single-line
+                      >
+                      </v-select>
+                    </v-col>
+                       <v-col cols="12" sm="4" md="4">
+                      <!-- size  -->
+                      <v-select
+                        v-model="product.size"
+                        :items="Sizes"
+                        item-text="text"
+                        dense
+                        outlined
+                        menu-props="auto"
+                        label="Select size"
+                        hide-details
+                        single-line
+                      >
+                      </v-select>
+                    </v-col>
+
+
+
+
                     <v-col cols="12" sm="6" md="6">
                       <v-text-field
                         label="quantity"
@@ -47,7 +112,7 @@
                         dense
                         outlined
                         required
-                        v-model="product.quantity"
+                        v-model.number="product.quantity"
                       ></v-text-field>
                     </v-col>
 
@@ -59,7 +124,7 @@
                         dense
                         outlined
                         required
-                        v-model="product.price"
+                        v-model.number="product.price"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
@@ -147,9 +212,24 @@
                 </v-toolbar>
               </template>
 
-              <template v-slot:[`item.name`]="{ item }">
+            <template v-slot:[`item.name`]="{ item }">
                 <p style="cursor: pointer" @click="details(item._id)">
                   {{ item.name }}
+                </p>
+              </template>
+               <template v-slot:[`item.size`]="{ item }" >
+                <p  v-if="item.size">
+                  {{ item.size |SizeFilter}}
+                </p>
+              </template>
+               <template v-slot:[`item.color`]="{ item }" >
+                <p v-if="item.color" >
+                  {{ item.color |ColorFilter}}
+                </p>
+              </template>
+               <template v-slot:[`item.gender`]="{ item }" >
+                <p v-if="item.gender" >
+                  {{ item.gender |GenderFilter}}
                 </p>
               </template>
 
@@ -172,6 +252,7 @@
 <script>
 import Functions from "../../../server/Products-Api";
 import CategoryFunctions from "../../../server/Category-Api";
+import Enums from '../../plugins/Enums';
 import { VueEditor } from "vue2-editor";
 export default {
   components: {
@@ -180,6 +261,9 @@ export default {
   data() {
     return {
       dialog: false,
+      Sizes:Enums.Sizes,
+      Genders:Enums.Genders,
+      Colors:Enums.Colors,
       id: null,
       search: "",
       editmode: false,
@@ -200,13 +284,30 @@ export default {
         },
         {
           text: "category",
-          value: "category",
+          value: "category.name",
           align: "center",
           class: ["orange--text", "text-capitalize"],
         },
         {
           text: "quantity",
           value: "quantity",
+          align: "center",
+          class: ["orange--text", "text-capitalize"],
+        },
+         {
+          text: "color",
+          value: "color",
+          align: "center",
+          class: ["orange--text", "text-capitalize"],
+        },
+         {
+          text: "size",
+          value: "size",
+          align: "center",
+          class: ["orange--text", "text-capitalize"],
+        }, {
+          text: "gender",
+          value: "gender",
           align: "center",
           class: ["orange--text", "text-capitalize"],
         },
@@ -220,26 +321,34 @@ export default {
       product: {
         name: "ammarlee",
         img: [],
+        subChildCategory:null,
         price: null,
         description: "it will be amazing  ",
         quantity: null,
         checked: false,
+        size:null,
+        gender:null,
+        color:null,
         files: null,
         category: "sports",
       },
       images: null,
-      states: null,
+      categorList: null,
+      subChildCategory:[],
+
     };
   },
   async mounted() {
     try {
       this.loading = true;
       const res = await Functions.fetchProducts();
-      const categorioes = await CategoryFunctions.getCat();
-      this.states = categorioes.data.cat;
+      console.log({res});
+      const categorioes = await CategoryFunctions.getCategories();
+      this.categorList = categorioes.data.cat;
       this.entities = res.data.posts;
       this.loading = false;
     } catch (error) {
+      console.log(error);
       this.loading = false;
       this.errors = error;
     }
@@ -284,6 +393,7 @@ export default {
       formData.append("user", JSON.stringify(this.currentUser));
       Functions.editProduct(formData)
         .then((res) => {
+          console.log({res});
           this.dialogNotifySuccess("edited successfully");
           var i = this.entities.indexOf(
             this.entities.filter((e) => e._id == res.data.post._id)[0]
@@ -347,6 +457,15 @@ export default {
           this.errors = err;
         });
     },
+  },
+  watch: {
+    "product.category"(newValue, ) {
+      if (newValue) {
+        this.subChildCategory=this.categorList.filter(i=>{
+          return i._id ==newValue
+      })[0].subCategory
+        }
+    }
   },
 
 };

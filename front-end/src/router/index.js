@@ -60,6 +60,7 @@ const routes = [
     header,footer
   }
   },
+  {path: "*",redirect:'/'}  
 
 ];
 

@@ -15,19 +15,17 @@ const xss = require('xss-clean')
 const productsRoutes =require(path.join(__dirname,'./routes/products'))
 const authRoutes = require(path.join(__dirname,'./routes/auth'))
 const adminRoutes = require(path.join(__dirname,'./routes/admin'))
-
 const cardRoutes = require(path.join(__dirname,'./routes/card'))
 const categoryRoutes = require(path.join(__dirname,'./routes/category'))
 const couponRoutes = require(path.join(__dirname,'./routes/Coupon'))
 const userRoutes = require(path.join(__dirname,'./routes/user'))
-
 const ordersRoutes = require(path.join(__dirname,'./routes/orders'))
 const paymentRoutes = require(path.join(__dirname,'./routes/payments'))
+const User = require(path.join(__dirname,'./models/user'))
 
 
 var MongoDBStore = require('connect-mongodb-session')(session)
 const cookieParser = require('cookie-parser')
-const User = require(path.join(__dirname,'./models/user'))
 const MONGODB_URI ='mongodb+srv://ammarlee:tonightwewilldoit@cluster0.j47ye.mongodb.net/vueproject'; 
 var app = express();
 app.use(express.json({limit: '50mb'}));

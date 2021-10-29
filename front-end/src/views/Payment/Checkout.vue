@@ -277,7 +277,7 @@ export default {
       this.$router.push("/card");
     },
     async handlePayment() {
-      this.overlay = true;
+     this.showOverlay = true;
       try {
         const stripePromise = loadStripe(
           "pk_test_51HW8XsFcp3bB6NpnedYc62t1S6sDcqnQQ5Bg0Dk8omjIyCF4y1frCqgIsCq5WQDum8b4PJAiOONN05ILQeQ8SWte00LMEnghcw"

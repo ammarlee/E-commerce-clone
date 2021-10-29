@@ -8,14 +8,32 @@ export default[
         default:()=>{ return import("../views/admin/Dashboard.vue")},
       },
       children:[
+         
+        {
+          path: "/",
+          name: "MainPage",
+        components:{
+          default:()=>{ return import("../views/admin/MainPage.vue")},
+        }
+        
+        }, 
+        {
+          path: "/allOrders",
+          name: "allOrders",
+        components:{
+          default:()=>{ return import("../views/admin/Orders.vue")},
+        }
+        
+        },
       
           {
-            path: "/",
+            path: "/Category",
             name: "admincategory",
           components:{
             default:()=>{ return import("../views/admin/Category.vue")},
           }
           }, 
+           
           {
             path: "/products",
             name: "adminProducts",

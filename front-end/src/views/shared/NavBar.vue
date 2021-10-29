@@ -102,7 +102,6 @@
                   </v-btn>
                   <v-divider class="my-3"></v-divider>
                 </router-link>
-                {{currentUser}}
                 <v-btn depressed v-if="currentUser" rounded @click="logout" text>
                   <v-icon>mdi-logout</v-icon>logout
                 </v-btn>

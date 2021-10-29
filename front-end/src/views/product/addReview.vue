@@ -112,7 +112,7 @@ export default {
     async createView() {
       if(this.review.last &&this.review.header) {
 
-      this.overlay = true;
+     this.showOverlay = true;
       const data = {
         productId: this.getproducts[0]._id,
         userId: this.getUser._id,
@@ -123,7 +123,7 @@ export default {
       };
       try {
         await Functions.createReview(data);
-        this.overlay = false;
+       this.showOverlay = false;
           this.dialogNotifySuccess("you have added a review")
         setTimeout(() => {
           this.$router.push("/");
@@ -131,7 +131,7 @@ export default {
       } catch (error) {
           const er=error
           this.alertError(er)
-        this.overlay = false;
+       this.showOverlay = false;
       }
       }
 
