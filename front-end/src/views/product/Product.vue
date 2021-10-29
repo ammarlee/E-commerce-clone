@@ -108,13 +108,13 @@ export default {
   },
   async mounted() {
     try {
-      this.overlay = true;
+     this.showOverlay = true;
       let res = await Functions.getSingleProduct(this.id);
       this.product = res.data.product;
       this.productImg = this.product.img[0];
-      this.overlay = false;
+     this.showOverlay = false;
     } catch (error) {
-      this.overlay = false;
+     this.showOverlay = false;
       this.errors = error;
     }
   },

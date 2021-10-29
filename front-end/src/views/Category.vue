@@ -29,13 +29,17 @@
     },
     methods: {
       navegatToCategory(item){
-        if (this.$route.name ==='cat') {
+        console.log('navegate');
+if (this.$route.name ==='cat') {
           this.$router.push('/').then(()=>{
-          this.$router.push(`/cat/${item.name}`)
+          // this.$router.push(`/cat/${item.name}`)
+          this.$router.push({ path: `/cat/${item.name}`, query: { page:1 }})
           })
         
       }else{
-        this.$router.push(`/cat/${item.name}`)
+        // this.$router.push(`/cat/${item.name}`)
+          this.$router.push({ path: `/cat/${item.name}`, query: { page:1 }})
+
       }
       }
     },

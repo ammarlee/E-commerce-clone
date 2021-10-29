@@ -65,13 +65,13 @@ export default {
     },
     async clearCart(cart) {
       try {
-        this.overlay = true;
+       this.showOverlay = true;
         await CardFunctions.clearTheCart(cart);
         this.updateCardInfo(null, null, 0);
         this.dialogNotifySuccess("thanks for your payment ");
       } catch (error) {
         this.errors = error.response.data;
-        this.overlay = false;
+       this.showOverlay = false;
       }
     },
   },

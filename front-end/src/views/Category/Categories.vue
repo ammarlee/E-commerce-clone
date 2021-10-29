@@ -60,18 +60,18 @@ export default {
   },
   methods: {
         navegatToCategory(item){
-          this.$router.push(`/cat/${item.name}`)
+          this.$router.push({ path: `/cat/${item._id}`, query: { page:1 }})
         },
   },
   async mounted() {
     try {
-      this.overlay = true;
+     this.showOverlay = true;
       const categories = await categoryFunctions.getCategories();
       this.categoryList = categories.data.cat;
-      this.overlay = false;
+     this.showOverlay = false;
     } catch (error) {
       this.errors = error.response;
-      this.overlay = false;
+     this.showOverlay = false;
     }
   },
 };

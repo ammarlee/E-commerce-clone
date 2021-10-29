@@ -14,8 +14,16 @@ static createCategory(data) {
     return axios().post(`delete-category/${id}`);
   }
   
+  static deleteSubChildCategory(data) {
+    return axios().post(`delete-sub-category`,data);
+  }
+  
    static getCategories() {
      return axios().get(`get-category`);
+   }
+   static addSubChildTOCategory(data){
+    return axios().post(`add-sub-child`,data);
+     
    }
   
 }

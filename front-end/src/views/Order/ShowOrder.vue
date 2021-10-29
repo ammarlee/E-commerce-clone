@@ -98,14 +98,14 @@ export default {
   },
   async mounted() {
     try {
-      this.overlay = true
+     this.showOverlay = true
       const res = await Functions.getSingleOrders(this.$route.params.id);
       this.order = res.data.order.items.products;
       this.total = res.data.order.items.total;
-      this.overlay = false;
+     this.showOverlay = false;
 
     } catch (error) {
-      this.overlay = false;
+     this.showOverlay = false;
       this.errors = error.response;
     }
   },

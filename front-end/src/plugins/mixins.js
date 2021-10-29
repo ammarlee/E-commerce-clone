@@ -24,7 +24,7 @@ export default {
         this.$store.dispatch("toggleRightDrawer", value);
       },
     },
-    overlay: {
+    showOverlay: {
       get() {
         return this.$store.getters.overlay;
       },
@@ -32,7 +32,7 @@ export default {
         this.$store.commit("setOverLay", value);
       },
     },
-    
+
     currentUser() {
       return this.$store.getters.getUser;
     },
@@ -82,7 +82,5 @@ export default {
         timeout: 5000,
       });
     },
-
-
   },
 };

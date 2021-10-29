@@ -3,6 +3,13 @@ const Schema = mongoose.Schema
 const CategorySchema = new Schema({
     name:{type:String ,unique:true},
     img:{type:String},
+    subCategory:[
+        { 
+            name:{type:String ,unique:true},
+             img:{type:String},
+            
+        }
+    ],
     color:String,
     description:String,
    

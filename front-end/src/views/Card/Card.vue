@@ -432,7 +432,7 @@ export default {
         return;
       } else {
         try {
-          this.overlay = true
+         this.showOverlay = true
           let userId = this.currentUser._id;
           await CardFunctions.setQuantity({
             ...product,
@@ -440,9 +440,9 @@ export default {
           });
           this.$store.commit("cartCount");
           this.$store.dispatch("findCart", userId);
-          this.overlay = false
+         this.showOverlay = false
         } catch (error) {
-          this.overlay = false
+         this.showOverlay = false
 
           console.log(error);
         }
@@ -450,24 +450,24 @@ export default {
     },
     async increaseQuantity(product) {
       try {
-        this.overlay =true
+       this.showOverlay =true
         let userId = this.currentUser._id;
          await CardFunctions.increaseQuantity({
           ...product,
           userId,
         });
-        this.overlay =false
+       this.showOverlay =false
         this.$store.commit("cartCount");
         this.$store.dispatch("findCart", userId);
       } catch (error) {
-        this.overlay =false
+       this.showOverlay =false
         console.log(error);
       }
     },
     async decreaseQuantity(product) {
       try {
         let userId = this.currentUser._id;
-        this.overlay =true
+       this.showOverlay =true
 
         if (product.quantity == 1) {
           this.deleteItemfromCart({
@@ -481,11 +481,11 @@ export default {
           });
           this.$store.commit("cartCount");
           this.$store.dispatch("findCart", userId);
-        this.overlay =false
+       this.showOverlay =false
 
         }
       } catch (error) {
-        this.overlay =false
+       this.showOverlay =false
         console.log(error);
       }
     },
@@ -496,7 +496,7 @@ export default {
       this.order.total = this.total;
     },
     async handlePayment() {
-      this.overlay = true;
+     this.showOverlay = true;
       try {
         const stripePromise = loadStripe(
           "pk_test_51HW8XsFcp3bB6NpnedYc62t1S6sDcqnQQ5Bg0Dk8omjIyCF4y1frCqgIsCq5WQDum8b4PJAiOONN05ILQeQ8SWte00LMEnghcw"
@@ -512,9 +512,9 @@ export default {
         await stripe.redirectToCheckout({
           sessionId: session.data.id,
         });
-        this.overlay =false
+       this.showOverlay =false
       } catch (error) {
-        this.overlay =false
+       this.showOverlay =false
         this.errors = error;
       }
     },
@@ -533,7 +533,7 @@ export default {
                 const res = await CardFunctions.removeFromCard(productId);
                 this.dialogNotifySuccess("deleted");
                 if (res.data.data.products.length == 0) {
-                  this.overlay = false;
+                 this.showOverlay = false;
                   this.errors = true;
                   // this.cart = null;
                   this.$store.dispatch("setCart", null);
@@ -559,7 +559,7 @@ export default {
                 }
               } catch (error) {
                 this.errors = error.response.data;
-                this.overlay = false;
+               this.showOverlay = false;
               }
             },
           },

@@ -30,11 +30,19 @@ const transporter = nodeMailer.createTransport(nodegride({
     let page=req.query.page *1 ||1;
     let limit=req.query.limit *1 ||6;
     let skip = (page-1) *limit;
-    let categories = req.body.categories
-    let query = { category: { $in: categories} }
+    let {categories,subCategory} = req.body
+    console.log({categories,subCategory});
+    let query
+    if (subCategory) {
+      query = { category: { $in: categories},subChildCategory: { $in: subCategory}, }
+      
+    }else{
+      query = { category: { $in: categories}, }
+
+    }
     try {
       const count = await Product.find(query).count()
-      const products = await  Product.find({ category: { $in: categories} }).skip(skip).limit(limit)
+      const products = await  Product.find(query).skip(skip).limit(limit)
       res.status(200).json({
         success:true,
         products,
@@ -46,6 +54,7 @@ const transporter = nodeMailer.createTransport(nodegride({
       })
       
     } catch (error) {
+      console.log(error);
       res.status(400).json({
         success:false,
         error
@@ -53,23 +62,27 @@ const transporter = nodeMailer.createTransport(nodegride({
     }
 
   }
-  exports.homePage=(req,res,next)=>{
-    Product.find({}).lean().then((posts)=>{
-          res.status(200).json({
-            success:true,
-            posts
-            
-          })
-          
-      }).catch(err=>{
-        res.status(400).json({
-          success:false,
-          err
-          
-        })
+  exports.homePage=async (req,res,next)=>{
+    try {
+      const products =await Product.find({})
+      .populate({
+        path: 'category ',
+        select: 'name _id'
+      }).exec()
+      
+      res.status(200).json({
+        success:true,
+        posts:products
         
       })
-
+      
+    } catch (error) {
+      res.status(400).json({
+        success:false,
+        error
+        
+      })
+    }
   }
   exports.searching=(req,res,next)=>{
     index.search(req.body.name).then((result)=>{
