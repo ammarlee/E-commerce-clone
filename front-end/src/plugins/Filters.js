@@ -17,6 +17,10 @@ Vue.filter("stateFilter", function(enumValue) {
   var enumObj = getEnumMember(Enums.State, enumValue);
   return enumObj.text;
 });
+Vue.filter("stateColorFilter", function(enumValue) {
+  var enumObj = getEnumMember(Enums.State, enumValue);
+  return enumObj.color;
+});
 
 Vue.filter("ColorFilter", function(enumValue) {
   var enumObj = getEnumMember(Enums.Colors, enumValue);

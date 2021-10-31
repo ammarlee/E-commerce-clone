@@ -12,7 +12,7 @@ static getAdminProducts(userId) {
   }
   
   static filterProduct(data) {
-    return axios().post(`filter-product?page=${data.page}&limit=5`, {categories:data.categories,subCategory:data.subCategory});
+    return axios().post(`filter-product?page=${data.page}&limit=5`, data);
   }
   static addProduct(formdata) {
     return axios().post(`file-upload`, formdata);

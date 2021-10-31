@@ -26,7 +26,6 @@ exports.addSubChildTOCategory =async (req, res, next) => {
 
     
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error, success: false });
     
   }
@@ -34,7 +33,6 @@ exports.addSubChildTOCategory =async (req, res, next) => {
 exports.deleteSubChildCategory = async (req,res,next)=>{
 try {
   const {subId,categoryId} =req.body
-  console.log({subId});
   const category = await Category.findOneAndUpdate(
     { _id:categoryId },
     { $pull: { subCategory: {_id:subId}} },
@@ -47,6 +45,39 @@ try {
   res.status(400).json({ error, success: false });
   
 }
+}
+exports.editSubChildCategory= async (req, res, next) => {
+  try {
+    const {_id,img,categoryId,name}= req.body
+    let newuploaderimg = await uploadImg(img)
+    
+      const category = await Category.findOneAndUpdate(
+        {
+          _id: categoryId,
+          subCategory: {
+            $elemMatch: {
+              _id,
+            },
+          },
+        },
+        {
+          $set: {
+            "subCategory.$.name": name,
+            "subCategory.$.img": newuploaderimg.img,
+           
+          },
+        },
+        { new: true }
+      );
+    res
+    .status(200)
+    .json({ category, success: true, msg: "you have updated sub child" });
+
+    
+  } catch (error) {
+  res.status(400).json({ error, success: false });
+    
+  }
 }
 exports.editCategory = async (req, res, next) => {
   let { name, description, _id } = req.body.category;
@@ -113,7 +144,6 @@ exports.getCategory = async (req, res, next) => {
     const categoryies = await Category.find({}).lean();
     res.status(200).json({ cat: categoryies, success: true });
   } catch (error) {
-    console.log(err);
     res.status(400).json({ err, success: false });
   }
 };

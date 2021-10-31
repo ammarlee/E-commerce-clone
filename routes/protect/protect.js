@@ -21,7 +21,17 @@ exports.protect = async (req,res,next)=>{
     })
     
   }
-  req.userId=decoded.userId
+  req.userId=freshUser._id
+  req.user = freshUser
   next()
 
+}
+exports.restrictRoutes = (...roles)=>{
+  return (req,res,next)=>{
+    if (!roles.includes(req.user.role)) {
+     return res.status(400).json({msg:'you are not admin'})
+    }else{
+      next()
+    }
+  }
 }

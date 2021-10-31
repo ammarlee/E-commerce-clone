@@ -88,6 +88,7 @@ app.use((req,res,next)=>{
   .catch(err => console.log(err));
 })
 
+app.use(ordersRoutes)
 app.use(categoryRoutes)
 app.use(paymentRoutes)
 app.use(couponRoutes)
@@ -96,7 +97,6 @@ app.use(adminRoutes)
 app.use(authRoutes)
 app.use(cardRoutes)
 app.use(userRoutes)
-app.use(ordersRoutes)
 app.use(compression())
 
 const port =process.env.PORT || 3000

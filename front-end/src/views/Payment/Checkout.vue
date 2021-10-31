@@ -52,103 +52,118 @@
 
             <v-stepper-content step="2">
               <!-- second  -->
-              <v-row dense>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="first name"
-                    v-model="shipping.firstName"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="last name"
-                    v-model="shipping.lastName"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row dense>
-                <v-col cols="12">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="company name"
-                    v-model="shipping.company"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="phone number"
-                    v-model="shipping.phone"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="address"
-                    v-model="shipping.address"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="Apartment/Suite/Building (Optional)"
-                    v-model="shipping.Apartment"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="city"
-                    v-model="shipping.city"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="Country"
-                    v-model="shipping.Country"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="state/province"
-                    v-model="shipping.state"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="postal code"
-                    v-model="shipping.postal"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    outlined
-                    dense
-                    label="order comments "
-                    v-model="shipping.comment"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-               <v-btn color="black white--text" @click="handlePayment">
-                <v-icon>mdi-cash</v-icon>checkout
-              </v-btn>
+              <v-form @submit.prevent="handlePayment" v-model="form">
+                <v-row dense>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="first name"
+                      v-model="shipping.firstName"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="last name"
+                      v-model="shipping.lastName"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row dense>
+                  <v-col cols="12">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="company name"
+                      v-model="shipping.company"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(10), rules.required]"
+                      dense
+                      label="phone number"
+                      v-model="shipping.phone"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="address"
+                      v-model="shipping.address"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      outlined
+                      dense
+                      label="Apartment/Suite/Building (Optional)"
+                      v-model="shipping.Apartment"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="city"
+                      v-model="shipping.city"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="Country"
+                      v-model="shipping.Country"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="state/province"
+                      v-model="shipping.state"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="postal code"
+                      v-model="shipping.postal"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      outlined
+                      :rules="[rules.minNameLen(4), rules.required]"
+                      dense
+                      label="order comments "
+                      v-model="shipping.comment"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-btn
+                  :disabled="!form"
+                  color="black white--text"
+                  type="submit"
+                >
+                  <v-icon>mdi-cash</v-icon>checkout
+                </v-btn>
+              </v-form>
             </v-stepper-content>
-
           </v-stepper>
         </v-col>
         <v-col cols="12" sm="4" md="4">
@@ -156,7 +171,9 @@
             <v-row dense class="text-capitalize font-weight-bold">
               <v-col cols="12" sm="6" md="6" class="">order summery</v-col>
               <v-col
-                cols="12" sm="6" md="6"
+                cols="12"
+                sm="6"
+                md="6"
                 @click="goToCard"
                 class="
                   text--body-2
@@ -178,7 +195,12 @@
                       style="width: 100%; height: 100%"
                     />
                   </v-col>
-                  <v-col cols="12" sm="6" md="6" class="d-flex align-center text-body-2">
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="6"
+                    class="d-flex align-center text-body-2"
+                  >
                     {{ item.name }}
                   </v-col>
 
@@ -227,32 +249,35 @@
     </v-container>
   </div>
   <div v-else>
-     <v-container>
+    <v-container>
       <v-row>
         <v-col>
-          <h3 class="stepper-head text-center my-6 header">your cart is empty</h3>
+          <h3 class="stepper-head text-center my-6 header">
+            your cart is empty
+          </h3>
         </v-col>
       </v-row>
-     </v-container>
+    </v-container>
   </div>
 </template>
 
 <script>
 import axios from "../../../server/MainApi";
 import { loadStripe } from "@stripe/stripe-js";
+import FormRules from "../../plugins/Form-rules";
 
 export default {
   data() {
     return {
+      form: false,
+      rules: FormRules,
       shipping: {},
       extraShipping: 9,
       e6: 2,
-      items: ["Foo", "Bar", "Fizz", "Buzz"],
       steps: 2,
     };
   },
   computed: {
-   
     cart() {
       return this.$store.getters.getCart;
     },
@@ -277,7 +302,7 @@ export default {
       this.$router.push("/card");
     },
     async handlePayment() {
-     this.showOverlay = true;
+      this.showOverlay = true;
       try {
         const stripePromise = loadStripe(
           "pk_test_51HW8XsFcp3bB6NpnedYc62t1S6sDcqnQQ5Bg0Dk8omjIyCF4y1frCqgIsCq5WQDum8b4PJAiOONN05ILQeQ8SWte00LMEnghcw"
@@ -290,8 +315,8 @@ export default {
         });
 
         const session = await response;
-        this.$store.commit("setShippingData",this.shipping)
-        
+        this.$store.commit("setShippingData", this.shipping);
+
         await stripe.redirectToCheckout({
           sessionId: session.data.id,
         });
@@ -314,7 +339,7 @@ export default {
 .stepper-head {
   text-transform: capitalize;
   font-weight: bold;
-   font-family: 'Caudex', serif !important;
+  font-family: "Caudex", serif !important;
   font-size: 30px;
 }
 

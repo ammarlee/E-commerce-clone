@@ -36,12 +36,11 @@ exports.createSession = async (req, res) => {
   const card = req.body;
   let item = [] 
   let filteritems= card.cart.products.forEach((i)=>{
-    console.log(i);
     item.push({
       price_data:{
-        currency:"usd",
+        currency:"egp",
         unit_amount: i.price,
-        product_data: { name: i.name},
+        product_data: { name: i.name ,images:[i.img],},
         
       },
       quantity:i.quantity
@@ -59,7 +58,6 @@ exports.createSession = async (req, res) => {
 
     res.json({ id: session.id });
   } catch (error) {
-    console.log(error);
     res.status(400).json(error);
   }
 };

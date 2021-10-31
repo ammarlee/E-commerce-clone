@@ -25,6 +25,11 @@ static createCategory(data) {
     return axios().post(`add-sub-child`,data);
      
    }
+   
+   static editsubChild(data){
+    return axios().post(`edit-sub-child`,data);
+     
+   }
   
 }
 export default Category

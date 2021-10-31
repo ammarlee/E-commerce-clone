@@ -8,7 +8,6 @@ const PDFDocument = require("pdfkit");
 exports.makeOrder=async (req,res,next)=>{
     const userId = req.body.cart.userId
     const {cart,total,location,shipping}=req.body
-    console.log(location);
     let date = new Date()
     try {
       const newOrder = await Order.create({
@@ -57,10 +56,34 @@ exports.makeOrder=async (req,res,next)=>{
      
     }
   
+  exports.changeOrderState=async (req,res,next)=>{
+    const {_id,newState} =req.body
+    console.log({order:newState});
+    try {
+    const order=   await Order.findOneAndUpdate(
+        { _id},
+        { $set: {shipping:newState} },
+        { new: true }
+      );
+      res.status(200).json({
+        success: true,
+        order,
+        msg: "you have edited order ",
+      });
+
+      
+    } catch (error) {
+      console.log(error);
+      res.status(401).json({
+        err,
+        success:false,
+    
+      })
+    }
+  }
   exports.getUserOrders=async (req,res,next)=>{
       const userId= req.params.id
       let user 
-      console.log({userId});
       userId=='null' ? user ={}:user ={userId}
       try {
     let orders = await Order.find(user).sort({"items.date": -1}).populate({

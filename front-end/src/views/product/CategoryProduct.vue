@@ -1,95 +1,104 @@
 <template>
   <div class="content">
-        <app-sub-category @getFilterdProducts="getFilterdProducts($event)"></app-sub-category>
-
     <v-container v-if="!showOverlay" class="thecontainer">
-      <v-row v-if="products && products.length > 0">
-        <v-col
-          cols="12"
-          sm="6"
-          md="4"
-          class="pointer mb-2"
-          v-for="item in products"
-          :key="item._id"
-        >
-          <v-hover v-slot="{ hover }">
-            <div>
-              <div>
-                <v-img
-                  :src="item.img[0]"
-                  contain
-                  max-height="360"
-                  aspect-ratio="1.4"
-                  @click.prevent="navigateToProduct(item._id)"
-                >
-                  <div
-                    v-if="hover"
-                    class="d-flex justify-center align-center hoverdiv"
-                    style="height: 100%"
-                  >
-                    <transition
-                      appear
-                      enter-active-class="animate__animated animate__fadeIn"
-                      leave-active-class="animate__animated animate__fadeOutDown"
-                      mode="out-in"
+      <v-row>
+        <v-col cols="12" sm="3" md="3" class="pa-0">
+          <app-sub-category
+            @getFilterdProducts="getFilterdProducts($event)"
+            @getFilterdProductsByColor="getFilterdProductsByColor($event)"
+          ></app-sub-category>
+        </v-col>
+        <v-row v-if="products">
+          <v-col v-if="products.length == 0">
+            <h1 class="text-center font-weight-bold pink--text">
+              there is no products
+            </h1>
+          </v-col>
+        </v-row>
+        <v-col v-if="products && products.length > 0" cols="12" sm="9" md="9">
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+              class="pointer mb-2"
+              v-for="item in products"
+              :key="item._id"
+            >
+              <v-hover v-slot="{ hover }">
+                <div>
+                  <div>
+                    <v-img
+                      :src="item.img[0]"
+                      contain
+                      max-height="360"
+                      aspect-ratio="1.4"
+                      @click.prevent="navigateToProduct(item._id)"
                     >
                       <div
-                        class="
-                          overlaydiv
-                          d-flex
-                          justify-center
-                          align-center
-                          divopacity
-                        "
-                        min-height="100"
-                        min-width="100"
+                        v-if="hover"
+                        class="d-flex justify-center align-center hoverdiv"
+                        style="height: 100%"
                       >
-                        <v-btn
-                          class="black white--text text-uppercase"
-                          @click.stop="openDialog(item._id)"
+                        <transition
+                          appear
+                          enter-active-class="animate__animated animate__fadeIn"
+                          leave-active-class="animate__animated animate__fadeOutDown"
+                          mode="out-in"
                         >
-                          quick view
+                          <div
+                            class="
+                              overlaydiv
+                              d-flex
+                              justify-center
+                              align-center
+                              divopacity
+                            "
+                            min-height="100"
+                            min-width="100"
+                          >
+                            <v-btn
+                              class="black white--text text-uppercase"
+                              @click.stop="openDialog(item._id)"
+                            >
+                              quick view
+                            </v-btn>
+                          </div>
+                        </transition>
+                      </div>
+                    </v-img>
+                    <div class="pt-6 text-center">
+                      <h4 class="mb-2 text-truncate detailsFont">
+                        {{ item.name }}
+                      </h4>
+                      <p class="detailsFont">${{ item.price }}</p>
+                      <div class="d-flex justify-center aligen-center">
+                        <v-btn
+                          color="black"
+                          class="white--text"
+                          @click.prevent="addToCart(item)"
+                        >
+                          <v-icon>mdi-cart</v-icon>
+                          add to card
                         </v-btn>
                       </div>
-                    </transition>
-                  </div>
-                </v-img>
-                <div class="pt-6 text-center">
-                  <h4 class="mb-2 text-truncate detailsFont">
-                    {{ item.name }}
-                  </h4>
-                  <p class="detailsFont">${{ item.price }}</p>
-                  <div class="d-flex justify-center aligen-center">
-                    <v-btn
-                      color="black"
-                      class="white--text"
-                      @click.prevent="addToCart(item)"
-                    >
-                      <v-icon>mdi-cart</v-icon>
-                      add to card
-                    </v-btn>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </v-hover>
+              </v-hover>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
+
       <div class="text-center mt-10">
         <v-pagination
           v-model="page"
           :length="hasNextPage ? page + 1 : page"
         ></v-pagination>
       </div>
-
-      <v-row v-if="products">
-        <v-col v-if="products.length == 0">
-          <h1 class="text-center font-weight-bold pink--text">
-            there is no products
-          </h1>
-        </v-col>
-      </v-row>
     </v-container>
+    <!-- quick view dialog for product -->
     <v-row>
       <v-col cols="12">
         <v-dialog v-model="dialog" persistent max-width="1000px">
@@ -129,19 +138,20 @@ export default {
   components: {
     "app-Product": Product,
     "app-sub-category": subCategory,
-
   },
   mixins: [CardMixins],
 
   data() {
     return {
       products: null,
-      subCategory:null,
+      subCategory: null,
       page: 1,
       hasNextPage: null,
       dialog: false,
       productId: null,
       showReview: false,
+      color: null,
+      size: null,
     };
   },
 
@@ -154,26 +164,22 @@ export default {
     },
   },
   mounted() {
-    console.log("mounted");
-    console.log(this.$route.query.page);
     this.fetchData();
   },
   watch: {
     page() {
-      try {
-        this.$router.replace({ path: `/cat/${this.param}`, query: { page: this.page } });
-        this.fetchData();
-        
-      } catch (error) {
-console.log(error,33333333);        
-      }
-
+      this.$router.replace({
+        path: `/cat/${this.param}`,
+        query: {
+          page: this.page,
+          child: null,
+          color: null,
+          size: null,
+        },
+      });
     },
     $route() {
       this.fetchData();
-    },
-    routerPage(news, old) {
-      console.log(news, old);
     },
   },
   beforeRouteUpdate(_to, _from, next) {
@@ -181,10 +187,12 @@ console.log(error,33333333);
   },
   methods: {
     getFilterdProducts(item) {
-      console.log({item});
-      this.subCategory =item._id
-    this.fetchData();
-
+      this.subCategory = item._id;
+      this.fetchData();
+    },
+    getFilterdProductsByColor(id){
+       this.color = id;
+      this.fetchData();
     },
     closeDialog() {
       this.dialog = false;
@@ -197,22 +205,26 @@ console.log(error,33333333);
     },
     async fetchData() {
       try {
-       this.showOverlay = true;
-        const res = await productsApi.filterProduct({
+        //  this.showOverlay = true;
+        let query = {
           categories: this.param,
-          subCategory:this.subCategory,
           page: this.page,
-        });
-        this.products = res.data.products;
-        this.hasNextPage = res.data.hasNextPage;
-       this.showOverlay = false;
+          subCategory: this.subCategory,
+        }
+        if (this.size) query.size=this.size
+        if (this.color) query.color=this.color
+        const {data}= await productsApi.filterProduct(query);
+        this.color =null;
+        this.products = data.products;
+        this.hasNextPage = data.hasNextPage;
+        this.showOverlay = false;
       } catch (error) {
-       this.showOverlay = false;
+        this.showOverlay = false;
         console.log(error);
       }
     },
     navigateToProduct(productId) {
-        this.$router.push("/Product/" + productId);
+      this.$router.push("/Product/" + productId);
     },
   },
 };
