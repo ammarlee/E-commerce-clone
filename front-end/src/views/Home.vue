@@ -2,7 +2,7 @@
   <div class="home">
     <div cols=" pt-0 pr-0 pl-0">
       <v-row>
-        <v-col cols="12" class="pt-0">
+        <v-col class=" pt-0" cols="12" >
           <app-carsoul></app-carsoul>
         </v-col>
       </v-row>

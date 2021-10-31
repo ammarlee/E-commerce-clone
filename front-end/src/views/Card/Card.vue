@@ -62,7 +62,7 @@
               <tbody class="table-body">
                 <tr v-for="item in cart.products" :key="item.id">
                   <td>
-                    <v-row @click="details(item._id)" style="cursor: pointer">
+                    <v-row @click="details(item.productId)" style="cursor: pointer">
                       <v-col cols="12" sm="3">
                         <img
                           :src="item.img"
@@ -157,89 +157,6 @@
               <v-divider></v-divider>
 
               <v-row class="text-left">
-                <v-col cols="8"><h5>shipping :</h5> </v-col>
-                <v-col
-                  cols="4"
-                  class="text-body-1"
-                  @click="ShippingDetails = !ShippingDetails"
-                  style="cursor: pointer"
-                >
-                  {{ ShippingDetails ? "cancel" : "add info" }}
-
-                  <v-icon
-                    >mdi-chevron-{{ ShippingDetails ? "up" : "down" }}</v-icon
-                  >
-                </v-col>
-              </v-row>
-              <v-divider></v-divider>
-              <transition
-                appear
-                enter-active-class="animate__animated animate__fadeInRight"
-                leave-active-class="animate__animated animate__fadeOut"
-                mode="in-out"
-                type="animation"
-              >
-                <v-row
-                  v-if="ShippingDetails"
-                  dense
-                  class="ShippingDetails text-left text-capitalize"
-                >
-                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>country </v-col>
-                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>
-                    <v-text-field
-                      v-model="shipping.country"
-                      label="country"
-                      outlined
-                      dense
-                      hide-details
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense
-                    >state/province
-                  </v-col>
-                  
-                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>
-                    <v-text-field
-                      v-model="shipping.state"
-                      label="state/province"
-                      outlined
-                      dense
-                      hide-details
-                    ></v-text-field>
-                  </v-col>
-                  
-                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>Suburb/city </v-col>
-                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>
-                    <v-text-field
-                      hide-details
-                      v-model="shipping.city"
-                      label="Suburb/city"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense
-                    >Zip/postcode
-                  </v-col>
-                  <v-col cols="12" sm="6" md="6" class="text-body-2" dense>
-                    <v-text-field
-                      hide-details
-                      v-model="shipping.postcode"
-                      label="Zip/postcode"
-                      outlined
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" dense>
-                    <v-btn outlined class="white--text black">
-                      estimate shipping
-                    </v-btn></v-col
-                  >
-                  <v-divider></v-divider>
-                </v-row>
-              </transition>
-
-              <v-row class="text-left">
                 <v-col cols="8"><h5>coupon code :</h5></v-col>
                 <v-col
                   cols="4"
@@ -309,20 +226,7 @@
               >
             </v-col>
           </v-row>
-          <!-- <v-row>
-            <v-col
-              dense
-              md="4"
-              offset-md="8"
-              class="detailsFont d-flex justify-end"
-              style="background: transparent !important"
-              @click="handlePayment"
-            >
-              <v-btn class="font-weight-bold pl-6 pr-6"
-                ><v-icon>mdi-cash</v-icon> checkout</v-btn
-              >
-            </v-col>
-          </v-row> -->
+        
         </div>
       </div>
 
@@ -375,8 +279,6 @@ export default {
           href: "/card",
         },
       ],
-      shipping: {},
-      ShippingDetails: false,
       ShippingCoupon: false,
       order: {},
       couponNumber: "",
@@ -571,7 +473,8 @@ export default {
     },
 
     details(productId) {
-      this.$router.push("/details/" + productId);
+      this.$router.push("/Product/" + productId);
+
     },
     updateCardInfo(a, b, c) {
       this.$store.commit("setCart", a);

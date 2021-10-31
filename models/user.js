@@ -6,6 +6,7 @@ const userSchema = new Schema({
         required:true,
         unique:false
     },
+    role:{ type:String,default:'user',enum:['admin','guide','user']},
     email: {
         type: String,
         required: true,

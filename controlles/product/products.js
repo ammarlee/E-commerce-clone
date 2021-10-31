@@ -30,16 +30,12 @@ const transporter = nodeMailer.createTransport(nodegride({
     let page=req.query.page *1 ||1;
     let limit=req.query.limit *1 ||6;
     let skip = (page-1) *limit;
-    let {categories,subCategory} = req.body
-    console.log({categories,subCategory});
-    let query
-    if (subCategory) {
-      query = { category: { $in: categories},subChildCategory: { $in: subCategory}, }
-      
-    }else{
-      query = { category: { $in: categories}, }
+    let {categories,subCategory,color,size} = req.body
+    let query ={ category: { $in: categories}, }
+    if (subCategory) query.subChildCategory = { $in: subCategory}
+    if (color) query.color = { $in: color}
+    if (size) query.size = { $in: size}
 
-    }
     try {
       const count = await Product.find(query).count()
       const products = await  Product.find(query).skip(skip).limit(limit)
@@ -54,7 +50,6 @@ const transporter = nodeMailer.createTransport(nodegride({
       })
       
     } catch (error) {
-      console.log(error);
       res.status(400).json({
         success:false,
         error
@@ -107,7 +102,6 @@ const transporter = nodeMailer.createTransport(nodegride({
     })
       
     } catch (err) {
-      console.log(err);
       res.status(400).json({
         err,
          msg:'you have an wrror with  added a new review'

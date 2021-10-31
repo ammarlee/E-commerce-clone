@@ -342,13 +342,11 @@ export default {
     try {
       this.loading = true;
       const res = await Functions.fetchProducts();
-      console.log({res});
       const categorioes = await CategoryFunctions.getCategories();
       this.categorList = categorioes.data.cat;
       this.entities = res.data.posts;
       this.loading = false;
     } catch (error) {
-      console.log(error);
       this.loading = false;
       this.errors = error;
     }
@@ -393,7 +391,6 @@ export default {
       formData.append("user", JSON.stringify(this.currentUser));
       Functions.editProduct(formData)
         .then((res) => {
-          console.log({res});
           this.dialogNotifySuccess("edited successfully");
           var i = this.entities.indexOf(
             this.entities.filter((e) => e._id == res.data.post._id)[0]

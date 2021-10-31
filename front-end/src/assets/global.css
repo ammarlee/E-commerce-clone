@@ -4,6 +4,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Caudex&display=swap');
 .fontName{
     font-family: 'Euphoria Script' !important;
+    font-weight: bold !important;
+    text-transform: capitalize !important;
 }
 
 .detailsFont{

@@ -1,14 +1,13 @@
 var enums ={};
 enums.State = [
-    {value:1,text:"red"},
-    {value:2,text:"green"},
-    {value:3,text:"blue"},
-    {value:4,text:"yellow"},
+    {color:'red',value:1,text:"init"},
+    {color:'pink',value:2,text:"confirmed"},
+    {color:'info',value:3,text:"processing"},
+    {color:'success',value:4,text:"completed"},
 
 ]
 enums.Colors=
 [
-   {value:1,text:"red"},
    {value:2,text:"green"},
    {value:3,text:"blue"},
    {value:4,text:"yellow"},

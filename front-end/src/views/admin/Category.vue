@@ -15,6 +15,8 @@
                 <v-container>
                   <v-form v-model="valid">
                     <v-row>
+                      <template v-if="!showSubChild">
+
                       <v-col cols="12" sm="6" md="6" class="d-block">
                         <v-text-field
                           dense
@@ -30,7 +32,6 @@
 
                       <v-col
                         cols="12"
-                        v-if="id"
                         sm="3"
                         class="ml-4"
                         md="3"
@@ -57,6 +58,8 @@
                           :src="img"
                         ></v-img>
                       </v-col>
+                      </template>
+
                       <v-divider></v-divider>
                       <v-col cols="12">
                         <v-row>
@@ -73,8 +76,8 @@
                           </v-col>
 
                           <v-col cols="12" v-if="showSubChild">
-                            <v-row>
-                              <v-col cols="12" sm="6" md="6">
+                            <v-row class="grey lighten-3">
+                              <v-col cols="12" sm="4" md="4">
                                 <v-text-field
                                   dense
                                   outlined
@@ -100,15 +103,27 @@
                               </v-col>
                               <v-col
                                 cols="12"
-                                sm="2"
-                                md="2"
+                                sm="1"
+                                md="1"
                                 v-if="!subchild._id"
                               >
                                 <v-btn class="success" @click="addsubChild"
                                   >add</v-btn
                                 >
+                               
                               </v-col>
-                              <v-col v-else cols="12" sm="2" md="2">
+                              <v-col
+                                cols="12"
+                                sm="1"
+                                md="1"
+                                v-if="!subchild._id"
+                              >
+                               
+                                <v-btn class="danger mr-1" @click="resetSubChild"
+                                  >rest</v-btn
+                                >
+                              </v-col>
+                              <v-col v-else cols="12" sm="1" md="1">
                                 <v-btn class="info" @click="editsubChild"
                                   >edit</v-btn
                                 >
@@ -125,6 +140,7 @@
                               </v-col>
                             </v-row>
                           </v-col>
+
                         </v-row>
                       </v-col>
                       <v-col cols="12" class="d-block">
@@ -154,7 +170,7 @@
                             ></v-img>
                           </template>
                           <template v-slot:[`item.actions`]="{ item }">
-                            <v-btn icon @click="delsub(item._id)"
+                            <v-btn icon @click="delSubChildCategory(item._id)"
                               ><v-icon color="error">mdi-delete</v-icon></v-btn
                             >
                             <v-btn icon @click="editsub(item)">
@@ -328,14 +344,21 @@ export default {
     async getDate() {
       try {
         this.loading = true;
-        const categorioes = await Functions.getCategories();
-        this.entities = categorioes.data.cat;
-        console.log({ categorioes });
+        const {data} = await Functions.getCategories();
+        this.entities = data.cat;
         this.loading = false;
       } catch (error) {
         this.loading = false;
         this.errors = error;
       }
+    },
+    resetSubChild(){
+      this.subchild={
+        name: "",
+        img: null,
+        categoryId: null,
+      }
+      this.id =null;
     },
     async confirmEdit() {
       try {
@@ -361,16 +384,24 @@ export default {
       this.id = null;
       this.img = null;
       this.dialog = true;
+      this.showSubChild =false
       this.category = {};
     },
     editsub(item) {
-      console.log(item);
       (this.showSubChild = true), (this.subchild = item);
       this.subchild.categoryId = this.id;
-      console.log( this.subchild);
     },
-    editsubChild() {},
-    delsub(id) {
+    async editsubChild() {
+      try {
+        const {data}=await Functions.editsubChild(this.subchild);
+        this.dialogNotifySuccess(data.msg);
+        
+      } catch (error) {
+        this.dialogNotifyError(error.response.msg);
+        
+      }
+    },
+    delSubChildCategory(id) {
       this.$dialog.info({
         text: "are you sure you want to delete?",
         title: "  delete category ",
@@ -384,9 +415,7 @@ export default {
                 categoryId: this.id,
                 subId: id,
               })
-                .then((res) => {
-                  console.log({ res });
-
+                .then(() => {
                   this.dialogNotifySuccess("deleted");
                 })
                 .catch((error) => {
@@ -438,7 +467,6 @@ export default {
       this.dialog = true;
       this.category = { ...this.entities.filter((e) => e._id == id)[0] };
       this.img = this.category.img;
-      console.log(this.category);
     },
     cancelEdit() {
       this.id = null;
